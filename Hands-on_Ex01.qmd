@@ -1,12 +1,14 @@
 ---
-title: "Hands on exercise1"
+title: "Hands-on_Ex01"
 editor: visual
 ---
 
-## Overview
+In this webpage, I'm going to share with you my learning journey of geospatial analytics.
+
+### Overview
 
 This is the overview paragraph
 
-## Getting Started
+## Getting Stared
 
 This is the getting start paragraph

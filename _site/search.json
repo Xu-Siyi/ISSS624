@@ -30,15 +30,22 @@
   {
     "objectID": "Hands-on_Ex01.html",
     "href": "Hands-on_Ex01.html",
-    "title": "Hands on exercise1",
+    "title": "Hands-on_Ex01",
     "section": "",
-    "text": "This is the overview paragraph"
+    "text": "In this webpage, I’m going to share with you my learning journey of geospatial analytics."
   },
   {
     "objectID": "Hands-on_Ex01.html#getting-started",
     "href": "Hands-on_Ex01.html#getting-started",
-    "title": "Hands on exercise1",
+    "title": "Hands-on Exercise 1",
     "section": "Getting Started",
     "text": "Getting Started\nThis is the getting start paragraph"
+  },
+  {
+    "objectID": "Hands-on_Ex01.html#getting-stared",
+    "href": "Hands-on_Ex01.html#getting-stared",
+    "title": "Hands-on_Ex01",
+    "section": "Getting Stared",
+    "text": "Getting Stared\nThis is the getting start paragraph"
   }
 ]
