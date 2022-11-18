@@ -17,9 +17,9 @@ pacman::p_load(sf, tidyverse)
 
 ## Importing Geospatial Data
 
-### Importing polygon feature data
+Importing polygon feature data
 
 ```{r}
-mpsz <- st_read(dsn = "data/geospatial", 
+mpsz <- st_read(dsn = "Hands-on_Ex1/data/geospatial", 
                   layer = "MP14_SUBZONE_WEB_PL")
 ```
