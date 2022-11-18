@@ -140,3 +140,94 @@ list(listings)
 ```
 
 ### (2)Creating a simple feature data frame from an aspatial data frame
+
+```{r}
+listings_sf <- st_as_sf(listings, 
+                       coords = c("longitude", "latitude"),
+                       crs=4326) %>%
+  st_transform(crs = 3414)
+```
+
+```{r}
+glimpse(listings_sf)
+```
+
+## Geoprocessing with sf package
+
+### (1)Buffering
+
+The solution:
+
+Firstly, st_buffer() of sf package is used to compute the 5-meter buffers around cycling paths
+
+```{r}
+buffer_cycling <- st_buffer(cyclingpath, 
+                               dist=5, nQuadSegs = 30)
+```
+
+```{r}
+buffer_cycling$AREA <- st_area(buffer_cycling)
+```
+
+```{r}
+sum(buffer_cycling$AREA)
+```
+
+### (2) Point-in-polygon count
+
+```{r}
+mpsz3414$`PreSch Count`<- lengths(st_intersects(mpsz3414, preschool3414))
+```
+
+```{r}
+summary(mpsz3414$`PreSch Count`)
+```
+
+```{r}
+top_n(mpsz3414, 1, `PreSch Count`)
+```
+
+```{r}
+mpsz3414$Area <- mpsz3414 %>%
+  st_area()
+```
+
+```{r}
+mpsz3414 <- mpsz3414 %>%
+  mutate(`PreSch Density` = `PreSch Count`/Area * 1000000)
+```
+
+## Explorotary Data Analysis (EDA)
+
+```{r}
+hist(mpsz3414$`PreSch Density`)
+```
+
+```{r}
+ggplot(data=mpsz3414, 
+       aes(x= as.numeric(`PreSch Density`)))+
+  geom_histogram(bins=20, 
+                 color="black", 
+                 fill="light blue") +
+  labs(title = "Are pre-school even distributed in Singapore?",
+       subtitle= "There are many planning sub-zones with a single pre-school, on the other hand, \nthere are two planning sub-zones with at least 20 pre-schools",
+      x = "Pre-school density (per km sq)",
+      y = "Frequency")
+```
+
+### DIY
+
+```{r}
+library(ggplot2)
+library(units)
+ggplot(mpsz3414, aes(x = `PreSch Count`,y = `PreSch Density`)) + geom_point()+labs(title="The relationship between Pre-school Density and Pre-school Count",
+       x="Pre-school count (per km sq)", y = "PreSch Desnity")+
+  theme_classic()  
+```
+
+```{r}
+ggplot(data=mpsz3414,aes(x = `PreSch Count`,y = `PreSch Desnity`)+ 
+  geom_point()+labs(title="The relationship between Pre-school Density and Pre-school Count",
+       x="Pre-school count (per km sq)", y = "PreSch Desnity")+
+  theme_classic()  
+```
