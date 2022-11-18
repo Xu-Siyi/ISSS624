@@ -23,3 +23,12 @@ pacman::p_load(sf, tidyverse)
 mpsz <- st_read(dsn = "data/geospatial", 
                   layer = "MP14_SUBZONE_WEB_PL")
 ```
+
+### Importing polyline feature data in shapefile form
+
+The code chunk below uses st_read() function of sf package to import CyclingPath shapefile into R as line feature data frame.
+
+```{r}
+cyclingpath = st_read(dsn = "data/geospatial", 
+                         layer = "CyclingPath")
+```
