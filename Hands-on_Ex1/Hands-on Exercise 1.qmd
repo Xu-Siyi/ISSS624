@@ -130,3 +130,13 @@ preschool3414 <- st_transform(preschool,
 ## Importing and Converting An Aspatial Data
 
 ### (1)Importing the aspatial data
+
+```{r}
+listings <- read_csv("data/aspatial/listings.csv")
+```
+
+```{r}
+list(listings) 
+```
+
+### (2)Creating a simple feature data frame from an aspatial data frame
