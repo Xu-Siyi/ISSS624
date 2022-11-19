@@ -224,10 +224,3 @@ ggplot(mpsz3414, aes(x = `PreSch Count`,y = `PreSch Density`)) + geom_point()+la
        x="Pre-school count (per km sq)", y = "PreSch Desnity")+
   theme_classic()  
 ```
-
-```{r}
-ggplot(data=mpsz3414,aes(x = `PreSch Count`,y = `PreSch Desnity`)+ 
-  geom_point()+labs(title="The relationship between Pre-school Density and Pre-school Count",
-       x="Pre-school count (per km sq)", y = "PreSch Desnity")+
-  theme_classic()  
-```

@@ -199,6 +199,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#importing-the-aspatial-data" id="toc-importing-the-aspatial-data" class="nav-link" data-scroll-target="#importing-the-aspatial-data">(1)Importing the aspatial data</a></li>
   <li><a href="#creating-a-simple-feature-data-frame-from-an-aspatial-data-frame" id="toc-creating-a-simple-feature-data-frame-from-an-aspatial-data-frame" class="nav-link" data-scroll-target="#creating-a-simple-feature-data-frame-from-an-aspatial-data-frame">(2)Creating a simple feature data frame from an aspatial data frame</a></li>
   </ul></li>
+  <li><a href="#geoprocessing-with-sf-package" id="toc-geoprocessing-with-sf-package" class="nav-link" data-scroll-target="#geoprocessing-with-sf-package">Geoprocessing with sf package</a>
+  <ul class="collapse">
+  <li><a href="#buffering" id="toc-buffering" class="nav-link" data-scroll-target="#buffering">(1)Buffering</a></li>
+  <li><a href="#point-in-polygon-count" id="toc-point-in-polygon-count" class="nav-link" data-scroll-target="#point-in-polygon-count">(2) Point-in-polygon count</a></li>
+  </ul></li>
+  <li><a href="#explorotary-data-analysis-eda" id="toc-explorotary-data-analysis-eda" class="nav-link" data-scroll-target="#explorotary-data-analysis-eda">Explorotary Data Analysis (EDA)</a>
+  <ul class="collapse">
+  <li><a href="#diy" id="toc-diy" class="nav-link" data-scroll-target="#diy">DIY</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -568,6 +577,131 @@ date  (1): last_review
 </section>
 <section id="creating-a-simple-feature-data-frame-from-an-aspatial-data-frame" class="level3">
 <h3 class="anchored" data-anchor-id="creating-a-simple-feature-data-frame-from-an-aspatial-data-frame">(2)Creating a simple feature data frame from an aspatial data frame</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>listings_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(listings, </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"longitude"</span>, <span class="st">"latitude"</span>),</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">crs=</span><span class="dv">4326</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">3414</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(listings_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 4,252
+Columns: 15
+$ id                             &lt;dbl&gt; 50646, 71609, 71896, 71903, 275343, 275…
+$ name                           &lt;chr&gt; "Pleasant Room along Bukit Timah", "Ens…
+$ host_id                        &lt;dbl&gt; 227796, 367042, 367042, 367042, 1439258…
+$ host_name                      &lt;chr&gt; "Sujatha", "Belinda", "Belinda", "Belin…
+$ neighbourhood_group            &lt;chr&gt; "Central Region", "East Region", "East …
+$ neighbourhood                  &lt;chr&gt; "Bukit Timah", "Tampines", "Tampines", …
+$ room_type                      &lt;chr&gt; "Private room", "Private room", "Privat…
+$ price                          &lt;dbl&gt; 80, 178, 81, 81, 52, 40, 72, 41, 49, 49…
+$ minimum_nights                 &lt;dbl&gt; 90, 90, 90, 90, 14, 14, 90, 8, 14, 14, …
+$ number_of_reviews              &lt;dbl&gt; 18, 20, 24, 48, 20, 13, 133, 105, 14, 1…
+$ last_review                    &lt;date&gt; 2014-07-08, 2019-12-28, 2014-12-10, 20…
+$ reviews_per_month              &lt;dbl&gt; 0.22, 0.28, 0.33, 0.67, 0.20, 0.16, 1.2…
+$ calculated_host_listings_count &lt;dbl&gt; 1, 4, 4, 4, 50, 50, 7, 1, 50, 50, 50, 4…
+$ availability_365               &lt;dbl&gt; 365, 365, 365, 365, 353, 364, 365, 90, …
+$ geometry                       &lt;POINT [m]&gt; POINT (22646.02 35167.9), POINT (…</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="geoprocessing-with-sf-package" class="level2">
+<h2 class="anchored" data-anchor-id="geoprocessing-with-sf-package">Geoprocessing with sf package</h2>
+<section id="buffering" class="level3">
+<h3 class="anchored" data-anchor-id="buffering">(1)Buffering</h3>
+<p>The solution:</p>
+<p>Firstly, st_buffer() of sf package is used to compute the 5-meter buffers around cycling paths</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>buffer_cycling <span class="ot">&lt;-</span> <span class="fu">st_buffer</span>(cyclingpath, </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">dist=</span><span class="dv">5</span>, <span class="at">nQuadSegs =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>buffer_cycling<span class="sc">$</span>AREA <span class="ot">&lt;-</span> <span class="fu">st_area</span>(buffer_cycling)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(buffer_cycling<span class="sc">$</span>AREA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>773143.9 [m^2]</code></pre>
+</div>
+</div>
+</section>
+<section id="point-in-polygon-count" class="level3">
+<h3 class="anchored" data-anchor-id="point-in-polygon-count">(2) Point-in-polygon count</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>mpsz3414<span class="sc">$</span><span class="st">`</span><span class="at">PreSch Count</span><span class="st">`</span><span class="ot">&lt;-</span> <span class="fu">lengths</span>(<span class="fu">st_intersects</span>(mpsz3414, preschool3414))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mpsz3414<span class="sc">$</span><span class="st">`</span><span class="at">PreSch Count</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   0.000   2.000   4.207   6.000  37.000 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">top_n</span>(mpsz3414, <span class="dv">1</span>, <span class="st">`</span><span class="at">PreSch Count</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 1 feature and 16 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 23449.05 ymin: 46001.23 xmax: 25594.22 ymax: 47996.47
+Projected CRS: SVY21 / Singapore TM
+  OBJECTID SUBZONE_NO      SUBZONE_N SUBZONE_C CA_IND PLN_AREA_N PLN_AREA_C
+1      290          3 WOODLANDS EAST    WDSZ03      N  WOODLANDS         WD
+      REGION_N REGION_C          INC_CRC FMEL_UPD_D   X_ADDR   Y_ADDR
+1 NORTH REGION       NR C90769E43EE6B0F2 2014-12-05 24506.64 46991.63
+  SHAPE_Leng SHAPE_Area                       geometry PreSch Count
+1   6603.608    2553464 MULTIPOLYGON (((24786.75 46...           37</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>mpsz3414<span class="sc">$</span>Area <span class="ot">&lt;-</span> mpsz3414 <span class="sc">%&gt;%</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_area</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>mpsz3414 <span class="ot">&lt;-</span> mpsz3414 <span class="sc">%&gt;%</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">PreSch Density</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">PreSch Count</span><span class="st">`</span><span class="sc">/</span>Area <span class="sc">*</span> <span class="dv">1000000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="explorotary-data-analysis-eda" class="level2">
+<h2 class="anchored" data-anchor-id="explorotary-data-analysis-eda">Explorotary Data Analysis (EDA)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(mpsz3414<span class="sc">$</span><span class="st">`</span><span class="at">PreSch Density</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on-Exercise-1_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>mpsz3414, </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span> <span class="fu">as.numeric</span>(<span class="st">`</span><span class="at">PreSch Density</span><span class="st">`</span>)))<span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">20</span>, </span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">color=</span><span class="st">"black"</span>, </span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">fill=</span><span class="st">"light blue"</span>) <span class="sc">+</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Are pre-school even distributed in Singapore?"</span>,</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle=</span> <span class="st">"There are many planning sub-zones with a single pre-school, on the other hand, </span><span class="sc">\n</span><span class="st">there are two planning sub-zones with at least 20 pre-schools"</span>,</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">"Pre-school density (per km sq)"</span>,</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">"Frequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on-Exercise-1_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="diy" class="level3">
+<h3 class="anchored" data-anchor-id="diy">DIY</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(units)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>udunits database from C:/R/R-4.2.2/library/units/share/udunits/udunits2.xml</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mpsz3414, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">PreSch Count</span><span class="st">`</span>,<span class="at">y =</span> <span class="st">`</span><span class="at">PreSch Density</span><span class="st">`</span>)) <span class="sc">+</span> <span class="fu">geom_point</span>()<span class="sc">+</span><span class="fu">labs</span>(<span class="at">title=</span><span class="st">"The relationship between Pre-school Density and Pre-school Count"</span>,</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Pre-school count (per km sq)"</span>, <span class="at">y =</span> <span class="st">"PreSch Desnity"</span>)<span class="sc">+</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on-Exercise-1_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 
 
 </section>
