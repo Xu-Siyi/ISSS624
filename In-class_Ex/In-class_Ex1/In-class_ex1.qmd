@@ -1,0 +1,52 @@
+---
+title: "In-class Exercise 1"
+author: "Xu Siyi"
+editor: visual
+---
+
+## 1 Overview
+
+In this in-class exercise 1, I will finish [Chapter 3 Spatial Weights and Applications](https://r4gdsa.netlify.app/chap03.html), which help me to understand how to define spatial relationship.
+
+## 2 The Study Area and Data
+
+Two data sets will be used in this hands-on exercise, they are:
+
+-   Hunan county boundary layer. This is a geospatial data set in ESRI shapefile format.
+
+-   Hunan_2012.csv: This csv file contains selected Hunan's local development indicators in 2012.
+
+### 2.1 Getting Started
+
+The code chunk below will install and load tidyverse and sf packages.
+
+```{r}
+pacman::p_load(sf,tidyverse,spdep)
+```
+
+## 3 Importing Geospatial Data
+
+### 3.1 importing Polygon features
+
+The code chunk below uses st_read() of sf package to import Hunan shapefile into R. The imported shapefile will be simple features Object of sf.
+
+```{r}
+hunan = st_read(dsn = "data/geospatial", 
+                  layer = "Hunan")
+```
+
+### 3.2 Import csv file
+
+Next, we will import Hunan_2012.csv into R by using read_csv() of readr package. The output is R dataframe class.
+
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
+
+### 3.3 Performing relational join
+
+The code chunk below will be used to update the attribute table of *hunan*\'s SpatialPolygonsDataFrame with the attribute fields of *hunan2012* dataframe. This is performed by using *left_join()* of **dplyr** package.
+
+```{r}
+hunan <- left_join(hunan,hunan2012)
+```
