@@ -2,7 +2,7 @@
 title: "Hands-on Ex2: Global and Local Measures of Spatial Autocorrelation"
 ---
 
-## Overview
+## 1 Overview
 
 In this hands-on exercise, you will learn how to compute Global and Local Measure of Spatial Autocorrelation (GLSA) by using **spdep** package. By the end to this hands-on exercise, you will be able to:
 
@@ -24,4 +24,111 @@ In this hands-on exercise, you will learn how to compute Global and Local Measur
 
 -   to visualise the analysis output by using **tmap** package.
 
-## Getting Started
+## 2 Getting Started
+
+### (1) The analytical question
+
+In spatial policy, one of the main development objective of the local govenment and planners is to ensure equal distribution of development in the province. Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if development are even distributed geographically. If the answer is No. Then, our next question will be "is there sign of spatial clustering?". And, if the answer for this question is yes, then our next question will be "where are these clusters?"
+
+In this case study, we are interested to examine the spatial pattern of a selected development indicator (i.e. GDP per capita) of Hunan Provice, People Republic of China.(https://en.wikipedia.org/wiki/Hunan)
+
+### (2) The Study Area and Data
+
+Two data sets will be used in this hands-on exercise, they are:
+
+Hunan province administrative boundary layer at county level. This is a geospatial data set in ESRI shapefile format.
+
+Hunan_2012.csv: This csv file contains selected Hunan's local development indicators in 2012.
+
+### (3) Setting the Analytical Toolls
+
+Before we get started, we need to ensure that **spdep**, **sf**, **tmap** and **tidyverse** packages of R are currently installed in your R.
+
+-   sf is use for importing and handling geospatial data in R,
+
+-   tidyverse is mainly use for wrangling attribute data in R,
+
+-   spdep will be used to compute spatial weights, global and local spatial autocorrelation statistics, and
+
+-   tmap will be used to prepare cartographic quality chropleth map.
+
+The code chunk below is used to perform the following tasks:
+
+-   creating a package list containing the necessary R packages,
+
+-   checking if the R packages in the package list have been installed in R,
+
+    -   if they have yet to be installed, RStudio will installed the missing packages,
+
+-   launching the packages into R environment.
+
+    ```{r}
+    pacman::p_load(sf, spdep, tmap, tidyverse)
+    ```
+
+## 3 Getting the Data Into R Environment
+
+### (1) Get data
+
+```{r}
+hunan <- st_read(dsn = "data/geospatial", 
+                 layer = "Hunan")
+```
+
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv",show_col_types = FALSE)
+```
+
+### (2) Performing relational join
+
+The code chunk below will be used to update the attribute table of *hunan*\'s SpatialPolygonsDataFrame with the attribute fields of *hunan2012* dataframe. This is performed by using *left_join()* of **dplyr** package.
+
+```{r}
+hunan <- left_join(hunan,hunan2012)
+```
+
+### (3) Visualising Regional Development Indicator
+
+Now, we are going to prepare a basemap and a choropleth map showing the distribution of GDPPC 2012 by using qtm() of tmap package.
+
+```{r}
+equal <- tm_shape(hunan) +
+  tm_fill("GDPPC",
+          n = 5,
+          style = "equal") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Equal interval classification")
+
+quantile <- tm_shape(hunan) +
+  tm_fill("GDPPC",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Equal quantile classification")
+
+tmap_arrange(equal, 
+             quantile, 
+             asp=1, 
+             ncol=2)
+```
+
+## 4 Global Spatial Autocorrelation
+
+In this section, you will learn how to compute global spatial autocorrelation statistics and to perform spatial complete randomness test for global spatial autocorrelation.
+
+### (1) Computing Contiguity Spatial Weights
+
+Before we can compute the global spatial autocorrelation statistics, we need to construct a spatial weights of the study area. The spatial weights is used to define the neighbourhood relationships between the geographical units (i.e. county) in the study area.
+
+In the code chunk below, [*poly2nb()*](https://r-spatial.github.io/spdep/reference/poly2nb.html) of **spdep** package is used to compute contiguity weight matrices for the study area. This function builds a neighbours list based on regions with contiguous boundaries. If you look at the documentation you will see that you can pass a \"queen\" argument that takes TRUE or FALSE as options. If you do not specify this argument the default is set to TRUE, that is, if you don\'t specify queen = FALSE this function will return a list of first order neighbours using the Queen criteria.
+
+More specifically, the code chunk below is used to compute Queen contiguity weight matrix.
+
+```{r}
+wm_q <- poly2nb(hunan, 
+                queen=TRUE)
+summary(wm_q)
+```
+
+The summary report above shows that there are 88 area units in Hunan. The most connected area unit has 11 neighbours. There are two area units with only one heighbours.
+
