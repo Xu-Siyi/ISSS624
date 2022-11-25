@@ -529,3 +529,119 @@ There are two type of distance-based proximity matrix, they are:
 -   fixed distance weight matrix; and
 
 -   adaptive distance weight matrix.
+
+#### ① Deriving the centroid
+
+We will need points to associate with each polygon before we can make our connectivity graph. It will be a little more complicated than just running st_centroid() on the sf object: us.bound. We need the coordinates in a separate data frame for this to work. To do this we will use a mapping function. The mapping function applies a given function to each element of a vector and returns a vector of the same length. Our input vector will be the geometry column of us.bound. Our function will be st_centroid(). We will be using map_dbl variation of map from the purrr package. For more documentation, check out map documentation
+
+To get our longitude values we map the st_centroid() function over the geometry column of us.bound and access the longitude value through double bracket notation \[\[\]\] and 1. This allows us to get only the longitude, which is the first value in each centroid.
+
+```{r}
+longitude <- map_dbl(hunan$geometry, ~st_centroid(.x)[[1]])
+```
+
+```{r}
+latitude <- map_dbl(hunan$geometry, ~st_centroid(.x)[[2]])
+```
+
+```{r}
+coords <- cbind(longitude, latitude)
+```
+
+#### ② Determine the cut-off distance
+
+```{r}
+#coords <- coordinates(hunan)
+k1 <- knn2nb(knearneigh(coords))
+k1dists <- unlist(nbdists(k1, coords, longlat = TRUE))
+summary(k1dists)
+```
+
+```{r}
+
+```
+
+#### ③ Computing fixed distance weight matrix
+
+```{r}
+wm_d62 <- dnearneigh(coords, 0, 62, longlat = TRUE)
+wm_d62
+```
+
+```{r}
+
+```
+
+```{r}
+wm62_lw <- nb2listw(wm_d62, style = 'B')
+summary(wm62_lw)
+```
+
+### (3) Computing adaptive distance weight matrix
+
+```{r}
+knn <- knn2nb(knearneigh(coords, k=8))
+knn
+```
+
+```{r}
+knn_lw <- nb2listw(knn, style = 'B')
+summary(knn_lw)
+```
+
+## 9 Computing Gi statistics
+
+### (1) Gi statistics using fixed distance
+
+```{r}
+fips <- order(hunan$County)
+gi.fixed <- localG(hunan$GDPPC, wm62_lw)
+gi.fixed
+```
+
+```{r}
+hunan.gi <- cbind(hunan, as.matrix(gi.fixed)) %>%
+  rename(gstat_fixed = as.matrix.gi.fixed.)
+```
+
+### (2) Mapping Gi values with fixed distance weights
+
+```{r}
+gdppc <- qtm(hunan, "GDPPC")
+
+Gimap <-tm_shape(hunan.gi) +
+  tm_fill(col = "gstat_fixed", 
+          style = "pretty",
+          palette="-RdBu",
+          title = "local Gi") +
+  tm_borders(alpha = 0.5)
+
+tmap_arrange(gdppc, Gimap, asp=1, ncol=2)
+```
+
+### (3) Gi statistics using adaptive distance
+
+```{r}
+fips <- order(hunan$County)
+gi.adaptive <- localG(hunan$GDPPC, knn_lw)
+hunan.gi <- cbind(hunan, as.matrix(gi.adaptive)) %>%
+  rename(gstat_adaptive = as.matrix.gi.adaptive.)
+```
+
+### (4) Mapping Gi values with adaptive distance weights
+
+```{r}
+gdppc<- qtm(hunan, "GDPPC")
+
+Gimap <- tm_shape(hunan.gi) + 
+  tm_fill(col = "gstat_adaptive", 
+          style = "pretty", 
+          palette="-RdBu", 
+          title = "local Gi") + 
+  tm_borders(alpha = 0.5)
+
+tmap_arrange(gdppc, 
+             Gimap, 
+             asp=1, 
+             ncol=2)
+```
