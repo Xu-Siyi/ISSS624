@@ -646,4 +646,4 @@ tmap_arrange(gdppc,
              ncol=2)
 ```
 
-1
+12
