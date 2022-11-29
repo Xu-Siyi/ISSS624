@@ -16,10 +16,11 @@ website:
           - text: In-class Exercises 1
             href: In-class_Ex/In-class_Ex1/In-class_ex1.qmd
           - text: In-class Exercises 2
-            href: In-class_Ex/In-class_Ex2/In-class_Ex2.qmd
+            href: In-class_Ex/in-class ex 2.qmd
       - text: Take home Exercises
         menu: 
           - text: Take home Exerciese 1
+            href: Take-home Exerciese/Take-home Ex1.qmd
     right:
       - href: index.qmd
         text: Home
