@@ -32,9 +32,7 @@ wp<- st_read(dsn="geodata",
   filter(clean_coun=="Nigeria")
 ```
 
-in the
-
-Then I saved it into wp_nga.rds. In this way I can delete geo_export data which is too large to git push.
+I saved it into wp_nga.rds. In this way I can delete geo_export data which is too large to git push.
 
 I add #eval: false to make sure the code chunk will only display
 
@@ -925,6 +923,8 @@ nga_wp.gi <- cbind(nga_wp, as.matrix(gi.adaptive)) %>%
 Now I visualize the location of hot spot and cold spot area. The code chunk below shows the functions used to map the Gi values derived using fixed distance weight matrix.
 
 ```{r}
+#| fig-width: 14
+#| fig-height: 12
 gdppc<- qtm(nga_wp, "wpt non-functional")
 
 Gimap <- tm_shape(nga_wp.gi) + 
