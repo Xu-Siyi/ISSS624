@@ -200,27 +200,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overviewd" id="toc-overviewd" class="nav-link active" data-scroll-target="#overviewd">Overviewd</a></li>
-  <li><a href="#import-data" id="toc-import-data" class="nav-link" data-scroll-target="#import-data">1 Import data</a>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link active" data-scroll-target="#data-preparation">1 Data Preparation</a>
   <ul class="collapse">
-  <li><a href="#import-waterpoint" id="toc-import-waterpoint" class="nav-link" data-scroll-target="#import-waterpoint">1.1 import waterpoint</a></li>
-  <li><a href="#import-nigeria-lga-boundary-data" id="toc-import-nigeria-lga-boundary-data" class="nav-link" data-scroll-target="#import-nigeria-lga-boundary-data">1.2 import Nigeria LGA boundary data</a></li>
-  </ul></li>
-  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">2 Data Wrangling</a>
+  <li><a href="#import-data" id="toc-import-data" class="nav-link" data-scroll-target="#import-data">1.1 Import data</a>
   <ul class="collapse">
-  <li><a href="#recoding-na-values-into-string" id="toc-recoding-na-values-into-string" class="nav-link" data-scroll-target="#recoding-na-values-into-string">2.1 Recoding NA values into string</a></li>
-  <li><a href="#eda" id="toc-eda" class="nav-link" data-scroll-target="#eda">2.2 EDA</a></li>
+  <li><a href="#import-waterpoint" id="toc-import-waterpoint" class="nav-link" data-scroll-target="#import-waterpoint">1.1.1 import waterpoint</a></li>
+  <li><a href="#import-nigeria-lga-boundary-data" id="toc-import-nigeria-lga-boundary-data" class="nav-link" data-scroll-target="#import-nigeria-lga-boundary-data">1.1.2 import Nigeria LGA boundary data</a></li>
   </ul></li>
-  <li><a href="#extracting-water-point-data" id="toc-extracting-water-point-data" class="nav-link" data-scroll-target="#extracting-water-point-data">3 Extracting Water Point Data</a>
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">1.2 Data Wrangling</a>
   <ul class="collapse">
-  <li><a href="#extracting-the-functional-water-point-data" id="toc-extracting-the-functional-water-point-data" class="nav-link" data-scroll-target="#extracting-the-functional-water-point-data">3.1 Extracting the functional water point data</a></li>
-  <li><a href="#extracting-non-funtional-water-point" id="toc-extracting-non-funtional-water-point" class="nav-link" data-scroll-target="#extracting-non-funtional-water-point">3.2 Extracting non-funtional water point</a></li>
-  <li><a href="#extracting-water-point-with-unknown-class" id="toc-extracting-water-point-with-unknown-class" class="nav-link" data-scroll-target="#extracting-water-point-with-unknown-class">3.3 Extracting water point with Unknown class</a></li>
+  <li><a href="#recoding-na-values-into-string" id="toc-recoding-na-values-into-string" class="nav-link" data-scroll-target="#recoding-na-values-into-string">1.2.1 Recoding NA values into string</a></li>
+  <li><a href="#eda" id="toc-eda" class="nav-link" data-scroll-target="#eda">1.2.2 EDA</a></li>
   </ul></li>
-  <li><a href="#performing-point-in-polygon-count" id="toc-performing-point-in-polygon-count" class="nav-link" data-scroll-target="#performing-point-in-polygon-count">4 Performing Point-in-Polygon Count</a></li>
-  <li><a href="#saving-the-analytical-data-table" id="toc-saving-the-analytical-data-table" class="nav-link" data-scroll-target="#saving-the-analytical-data-table">5 Saving the Analytical Data Table</a></li>
-  <li><a href="#visualising-the-spatial-dsitribution-of-water-points" id="toc-visualising-the-spatial-dsitribution-of-water-points" class="nav-link" data-scroll-target="#visualising-the-spatial-dsitribution-of-water-points">6 Visualising the spatial dsitribution of water points</a></li>
-  <li><a href="#outliersclusters-analysis" id="toc-outliersclusters-analysis" class="nav-link" data-scroll-target="#outliersclusters-analysis">2 Outliers/clusters analysis</a>
+  <li><a href="#extracting-water-point-data" id="toc-extracting-water-point-data" class="nav-link" data-scroll-target="#extracting-water-point-data">1.3 Extracting Water Point Data</a>
+  <ul class="collapse">
+  <li><a href="#extracting-the-functional-water-point-data" id="toc-extracting-the-functional-water-point-data" class="nav-link" data-scroll-target="#extracting-the-functional-water-point-data">1.3.1 Extracting the functional water point data</a></li>
+  <li><a href="#extracting-non-funtional-water-point" id="toc-extracting-non-funtional-water-point" class="nav-link" data-scroll-target="#extracting-non-funtional-water-point">1.3.2 Extracting non-funtional water point</a></li>
+  <li><a href="#extracting-water-point-with-unknown-class" id="toc-extracting-water-point-with-unknown-class" class="nav-link" data-scroll-target="#extracting-water-point-with-unknown-class">1.3.3 Extracting water point with Unknown class</a></li>
+  </ul></li>
+  <li><a href="#performing-point-in-polygon-count" id="toc-performing-point-in-polygon-count" class="nav-link" data-scroll-target="#performing-point-in-polygon-count">1.4 Performing Point-in-Polygon Count</a></li>
+  <li><a href="#saving-the-analytical-data-table" id="toc-saving-the-analytical-data-table" class="nav-link" data-scroll-target="#saving-the-analytical-data-table">1.5 Saving the Analytical Data Table</a></li>
+  <li><a href="#visualising-the-spatial-dsitribution-of-water-points" id="toc-visualising-the-spatial-dsitribution-of-water-points" class="nav-link" data-scroll-target="#visualising-the-spatial-dsitribution-of-water-points">1.66 Visualising the spatial dsitribution of water points</a></li>
+  </ul></li>
+  <li><a href="#outliersclusters-analysis" id="toc-outliersclusters-analysis" class="nav-link" data-scroll-target="#outliersclusters-analysis">2 Outliers/Clusters Analysis</a>
   <ul class="collapse">
   <li><a href="#global-spatial-autocorrelation" id="toc-global-spatial-autocorrelation" class="nav-link" data-scroll-target="#global-spatial-autocorrelation">2.1 Global Spatial Autocorrelation</a>
   <ul class="collapse">
@@ -234,11 +236,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </ul></li>
   <li><a href="#cluster-and-outlier-analysis" id="toc-cluster-and-outlier-analysis" class="nav-link" data-scroll-target="#cluster-and-outlier-analysis">2.3 Cluster and Outlier Analysis</a>
   <ul class="collapse">
-  <li><a href="#functional-waterpoint" id="toc-functional-waterpoint" class="nav-link" data-scroll-target="#functional-waterpoint">2.3.1 Functional waterpoint</a></li>
-  <li><a href="#not-functional-waterpoint" id="toc-not-functional-waterpoint" class="nav-link" data-scroll-target="#not-functional-waterpoint">2.3.2 Not Functional Waterpoint</a></li>
+  <li><a href="#functional-water-points-1" id="toc-functional-water-points-1" class="nav-link" data-scroll-target="#functional-water-points-1">2.3.1 Functional water points</a></li>
+  <li><a href="#not-functional-water-points-1" id="toc-not-functional-water-points-1" class="nav-link" data-scroll-target="#not-functional-water-points-1">2.3.2 Not Functional water points</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#hot-spot-area-analysis" id="toc-hot-spot-area-analysis" class="nav-link" data-scroll-target="#hot-spot-area-analysis">3 Hot Spot Area analysis</a>
+  <li><a href="#hot-spot-area-and-cold-spot-analysis" id="toc-hot-spot-area-and-cold-spot-analysis" class="nav-link" data-scroll-target="#hot-spot-area-and-cold-spot-analysis">3 Hot Spot Area and Cold Spot Analysis</a>
   <ul class="collapse">
   <li><a href="#getis-and-ords-g-statistics" id="toc-getis-and-ords-g-statistics" class="nav-link" data-scroll-target="#getis-and-ords-g-statistics">3.1 Getis and Ord’s G-Statistics</a></li>
   <li><a href="#deriving-distance-based-weight-matrix" id="toc-deriving-distance-based-weight-matrix" class="nav-link" data-scroll-target="#deriving-distance-based-weight-matrix">3.2 Deriving distance-based weight matrix</a>
@@ -250,8 +252,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#computing-adaptive-distance-weight-matrix" id="toc-computing-adaptive-distance-weight-matrix" class="nav-link" data-scroll-target="#computing-adaptive-distance-weight-matrix">3.3 Computing adaptive distance weight matrix</a></li>
   <li><a href="#computing-gi-statistics-and-visualize-hot-spot-area" id="toc-computing-gi-statistics-and-visualize-hot-spot-area" class="nav-link" data-scroll-target="#computing-gi-statistics-and-visualize-hot-spot-area">3.4 Computing Gi statistics and Visualize Hot Spot Area</a>
   <ul class="collapse">
-  <li><a href="#functional-water-point" id="toc-functional-water-point" class="nav-link" data-scroll-target="#functional-water-point">3.4.1 Functional water point</a></li>
-  <li><a href="#not-functional-water-points" id="toc-not-functional-water-points" class="nav-link" data-scroll-target="#not-functional-water-points">3.4.2 Not Functional water points</a></li>
+  <li><a href="#functional-water-points-2" id="toc-functional-water-points-2" class="nav-link" data-scroll-target="#functional-water-points-2">3.4.1 Functional water points</a></li>
+  <li><a href="#not-functional-water-points-2" id="toc-not-functional-water-points-2" class="nav-link" data-scroll-target="#not-functional-water-points-2">3.4.2 Not Functional water points</a></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
   </ul></li>
   </ul></li>
@@ -277,11 +279,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="overviewd" class="level2">
-<h2 class="anchored" data-anchor-id="overviewd">Overviewd</h2>
-</section>
+<section id="data-preparation" class="level1">
+<h1>1 Data Preparation</h1>
 <section id="import-data" class="level2">
-<h2 class="anchored" data-anchor-id="import-data">1 Import data</h2>
+<h2 class="anchored" data-anchor-id="import-data">1.1 Import data</h2>
 <p>First of all we load the package that needed: sf, spdep, tmap, tidyverse,dplyr, funModeling</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, spdep, tmap, tidyverse,dplyr, funModeling)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -293,7 +294,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <p>change it to shorter name</p>
 <section id="import-waterpoint" class="level3">
-<h3 class="anchored" data-anchor-id="import-waterpoint">1.1 import waterpoint</h3>
+<h3 class="anchored" data-anchor-id="import-waterpoint">1.1.1 import waterpoint</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>wp<span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn=</span><span class="st">"geodata"</span>,</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">layer=</span><span class="st">"geo_export"</span>,</span>
@@ -309,7 +310,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 <section id="import-nigeria-lga-boundary-data" class="level3">
-<h3 class="anchored" data-anchor-id="import-nigeria-lga-boundary-data">1.2 import Nigeria LGA boundary data</h3>
+<h3 class="anchored" data-anchor-id="import-nigeria-lga-boundary-data">1.1.2 import Nigeria LGA boundary data</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>nga<span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn=</span><span class="st">"geodata"</span>,</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">layer=</span><span class="st">"geoBoundaries-NGA-ADM2"</span>,</span>
@@ -327,9 +328,9 @@ Geodetic CRS:  WGS 84</code></pre>
 </section>
 </section>
 <section id="data-wrangling" class="level2">
-<h2 class="anchored" data-anchor-id="data-wrangling">2 Data Wrangling</h2>
+<h2 class="anchored" data-anchor-id="data-wrangling">1.2 Data Wrangling</h2>
 <section id="recoding-na-values-into-string" class="level3">
-<h3 class="anchored" data-anchor-id="recoding-na-values-into-string">2.1 Recoding NA values into string</h3>
+<h3 class="anchored" data-anchor-id="recoding-na-values-into-string">1.2.1 Recoding NA values into string</h3>
 <p>In the code chunk below, replace_na() is used to recode all the NA values in status_cle field into Unknown.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>wp_nga <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"geodata/wp_nga.rds"</span>) <span class="sc">%&gt;%</span></span>
@@ -337,7 +338,7 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 </section>
 <section id="eda" class="level3">
-<h3 class="anchored" data-anchor-id="eda">2.2 EDA</h3>
+<h3 class="anchored" data-anchor-id="eda">1.2.2 EDA</h3>
 <p>In the code chunk below, freq() of funModeling package is used to display the distribution of status_cle field in wp_nga.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">freq</span>(<span class="at">data=</span>wp_nga, </span>
@@ -366,10 +367,10 @@ of ggplot2 3.3.4.
 </section>
 </section>
 <section id="extracting-water-point-data" class="level2">
-<h2 class="anchored" data-anchor-id="extracting-water-point-data">3 Extracting Water Point Data</h2>
+<h2 class="anchored" data-anchor-id="extracting-water-point-data">1.3 Extracting Water Point Data</h2>
 <p>In this section, we will extract the water point records by using classes in status_cle field.</p>
 <section id="extracting-the-functional-water-point-data" class="level3">
-<h3 class="anchored" data-anchor-id="extracting-the-functional-water-point-data">3.1 Extracting the functional water point data</h3>
+<h3 class="anchored" data-anchor-id="extracting-the-functional-water-point-data">1.3.1 Extracting the functional water point data</h3>
 <p>in this code chunk below, filter() is used to select functional water points</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>wpt_functional <span class="ot">&lt;-</span> wp_nga <span class="sc">%&gt;%</span></span>
@@ -393,7 +394,7 @@ of ggplot2 3.3.4.
 </div>
 </section>
 <section id="extracting-non-funtional-water-point" class="level3">
-<h3 class="anchored" data-anchor-id="extracting-non-funtional-water-point">3.2 Extracting non-funtional water point</h3>
+<h3 class="anchored" data-anchor-id="extracting-non-funtional-water-point">1.3.2 Extracting non-funtional water point</h3>
 <p>In the code chunk below, filter() of dplyr is used to select non-functional water points.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>wpt_nonfunctional <span class="ot">&lt;-</span> wp_nga <span class="sc">%&gt;%</span></span>
@@ -420,7 +421,7 @@ of ggplot2 3.3.4.
 </div>
 </section>
 <section id="extracting-water-point-with-unknown-class" class="level3">
-<h3 class="anchored" data-anchor-id="extracting-water-point-with-unknown-class">3.3 Extracting water point with Unknown class</h3>
+<h3 class="anchored" data-anchor-id="extracting-water-point-with-unknown-class">1.3.3 Extracting water point with Unknown class</h3>
 <p>In the code chunk below, <code>filter()</code> of dplyr is used to select water points with unknown status.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>wpt_unknown <span class="ot">&lt;-</span> wp_nga <span class="sc">%&gt;%</span></span>
@@ -440,7 +441,7 @@ of ggplot2 3.3.4.
 </section>
 </section>
 <section id="performing-point-in-polygon-count" class="level2">
-<h2 class="anchored" data-anchor-id="performing-point-in-polygon-count">4 Performing Point-in-Polygon Count</h2>
+<h2 class="anchored" data-anchor-id="performing-point-in-polygon-count">1.4 Performing Point-in-Polygon Count</h2>
 <p>The point-in-polygon (PIP) problem asks whether a given point in the plane lies inside, outside, or on the boundary of a polygon.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>nga_wp <span class="ot">&lt;-</span> nga <span class="sc">%&gt;%</span> </span>
@@ -455,7 +456,7 @@ of ggplot2 3.3.4.
 </div>
 </section>
 <section id="saving-the-analytical-data-table" class="level2">
-<h2 class="anchored" data-anchor-id="saving-the-analytical-data-table">5 Saving the Analytical Data Table</h2>
+<h2 class="anchored" data-anchor-id="saving-the-analytical-data-table">1.5 Saving the Analytical Data Table</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>nga_wp <span class="ot">&lt;-</span> nga_wp <span class="sc">%&gt;%</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pct_functional =</span> <span class="st">`</span><span class="at">wpt functional</span><span class="st">`</span><span class="sc">/</span><span class="st">`</span><span class="at">total wpt</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
@@ -472,7 +473,7 @@ of ggplot2 3.3.4.
 <p>There is only data file we use, nga_wp.rds, which is the combination of the geospatial and aspatial data.</p>
 </section>
 <section id="visualising-the-spatial-dsitribution-of-water-points" class="level2">
-<h2 class="anchored" data-anchor-id="visualising-the-spatial-dsitribution-of-water-points">6 Visualising the spatial dsitribution of water points</h2>
+<h2 class="anchored" data-anchor-id="visualising-the-spatial-dsitribution-of-water-points">1.66 Visualising the spatial dsitribution of water points</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>nga_wp <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"geodata/nga_wp.rds"</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>total <span class="ot">&lt;-</span> <span class="fu">qtm</span>(nga_wp, <span class="st">"total wpt"</span>)</span>
@@ -486,8 +487,9 @@ of ggplot2 3.3.4.
 </div>
 </div>
 </section>
+</section>
 <section id="outliersclusters-analysis" class="level1">
-<h1>2 Outliers/clusters analysis</h1>
+<h1>2 Outliers/Clusters Analysis</h1>
 <section id="global-spatial-autocorrelation" class="level2">
 <h2 class="anchored" data-anchor-id="global-spatial-autocorrelation">2.1 Global Spatial Autocorrelation</h2>
 <section id="computing-contiguity-spatial-weights" class="level3">
@@ -576,8 +578,6 @@ Moran I statistic       Expectation          Variance
 </div>
 </div>
 <p>p-value&lt;0.01, means we reject Null hypothesis.</p>
-<section id="如何解释结果" class="level6">
-<h6 class="anchored" data-anchor-id="如何解释结果">*如何解释结果</h6>
 <p>The code chunk below performs permutation test for Moran's I statistic by using moran.mc() of spdep. A total of 1000 simulation will be performed.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
@@ -630,10 +630,6 @@ alternative hypothesis: greater</code></pre>
 <p><img src="Take-home-Ex1_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</section>
-<section id="什么意思" class="level6">
-<h6 class="anchored" data-anchor-id="什么意思">*什么意思</h6>
-</section>
 </section>
 <section id="water-non-fuctional" class="level5">
 <h5 class="anchored" data-anchor-id="water-non-fuctional">(2) Water-non fuctional</h5>
@@ -708,9 +704,6 @@ alternative hypothesis: greater</code></pre>
 <p><img src="Take-home-Ex1_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<section id="什么意思-1" class="level6">
-<h6 class="anchored" data-anchor-id="什么意思-1">*什么意思</h6>
-</section>
 </section>
 </section>
 </section>
@@ -719,8 +712,8 @@ alternative hypothesis: greater</code></pre>
 <h2 class="anchored" data-anchor-id="spatial-correlogram">2.2 Spatial Correlogram</h2>
 <section id="compute-morans-i-correlogram" class="level3">
 <h3 class="anchored" data-anchor-id="compute-morans-i-correlogram">2.2.1 Compute Moran’s I correlogram</h3>
-<section id="water-functional" class="level4">
-<h4 class="anchored" data-anchor-id="water-functional">(1) Water functional</h4>
+<section id="functional-water-points" class="level4">
+<h4 class="anchored" data-anchor-id="functional-water-points">(1) Functional water points</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>MI_corr <span class="ot">&lt;-</span> <span class="fu">sp.correlogram</span>(wm_q, </span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>                          nga_wp<span class="sc">$</span><span class="st">`</span><span class="at">wpt functional</span><span class="st">`</span>, </span>
@@ -756,8 +749,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 </section>
-<section id="water-non-functional" class="level4">
-<h4 class="anchored" data-anchor-id="water-non-functional">(2) Water non-functional</h4>
+<section id="not-functional-water-points" class="level4">
+<h4 class="anchored" data-anchor-id="not-functional-water-points">(2) Not Functional water points</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>MI_corr <span class="ot">&lt;-</span> <span class="fu">sp.correlogram</span>(wm_q, </span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>                          nga_wp<span class="sc">$</span><span class="st">`</span><span class="at">wpt non-functional</span><span class="st">`</span>, </span>
@@ -798,8 +791,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="cluster-and-outlier-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="cluster-and-outlier-analysis">2.3 Cluster and Outlier Analysis</h2>
 <p>I use Local Indicators for Spatial Association (LISA) to detect cluster and/or outlier from functional waterpoint and Not Functional water points of Nigeria</p>
-<section id="functional-waterpoint" class="level3">
-<h3 class="anchored" data-anchor-id="functional-waterpoint">2.3.1 Functional waterpoint</h3>
+<section id="functional-water-points-1" class="level3">
+<h3 class="anchored" data-anchor-id="functional-water-points-1">2.3.1 Functional water points</h3>
 <section id="computing-local-morans-i" class="level4">
 <h4 class="anchored" data-anchor-id="computing-local-morans-i">2.3.1.1 Computing local Moran’s I</h4>
 <p>I use shapeID column because there are duplication “Bassa, Ifelodun, Irepodun, Nasarawa, Obi, Surulere” in shapename column</p>
@@ -2557,8 +2550,8 @@ NGA-ADM2-72505758B99970923         0.7119</code></pre>
 </section>
 </section>
 </section>
-<section id="not-functional-waterpoint" class="level3">
-<h3 class="anchored" data-anchor-id="not-functional-waterpoint">2.3.2 Not Functional Waterpoint</h3>
+<section id="not-functional-water-points-1" class="level3">
+<h3 class="anchored" data-anchor-id="not-functional-water-points-1">2.3.2 Not Functional water points</h3>
 <section id="computing-local-morans-i-1" class="level4">
 <h4 class="anchored" data-anchor-id="computing-local-morans-i-1">2.3.1.1 Computing local Moran’s I</h4>
 <p>I use shapeID column because there are duplication “Bassa, Ifelodun, Irepodun, Nasarawa, Obi, Surulere” in shapename column</p>
@@ -4318,8 +4311,8 @@ NGA-ADM2-72505758B99970923         0.6016</code></pre>
 </section>
 </section>
 </section>
-<section id="hot-spot-area-analysis" class="level1">
-<h1>3 Hot Spot Area analysis</h1>
+<section id="hot-spot-area-and-cold-spot-analysis" class="level1">
+<h1>3 Hot Spot Area and Cold Spot Analysis</h1>
 <section id="getis-and-ords-g-statistics" class="level2">
 <h2 class="anchored" data-anchor-id="getis-and-ords-g-statistics">3.1 Getis and Ord’s G-Statistics</h2>
 <p>Here, statistically significant hot-spots are recognised as areas of high values where other areas within a neighbourhood range also share high values too.</p>
@@ -4463,8 +4456,8 @@ B 774 599076 6192 11152 201942</code></pre>
 </section>
 <section id="computing-gi-statistics-and-visualize-hot-spot-area" class="level2">
 <h2 class="anchored" data-anchor-id="computing-gi-statistics-and-visualize-hot-spot-area">3.4 Computing Gi statistics and Visualize Hot Spot Area</h2>
-<section id="functional-water-point" class="level3">
-<h3 class="anchored" data-anchor-id="functional-water-point">3.4.1 Functional water point</h3>
+<section id="functional-water-points-2" class="level3">
+<h3 class="anchored" data-anchor-id="functional-water-points-2">3.4.1 Functional water points</h3>
 <section id="gi-statistics-using-fixed-distance" class="level4">
 <h4 class="anchored" data-anchor-id="gi-statistics-using-fixed-distance">(1) Gi statistics using fixed distance</h4>
 <div class="cell">
@@ -4729,8 +4722,8 @@ attr(,"class")
 </div>
 </section>
 </section>
-<section id="not-functional-water-points" class="level3">
-<h3 class="anchored" data-anchor-id="not-functional-water-points">3.4.2 Not Functional water points</h3>
+<section id="not-functional-water-points-2" class="level3">
+<h3 class="anchored" data-anchor-id="not-functional-water-points-2">3.4.2 Not Functional water points</h3>
 <section id="gi-statistics-using-fixed-distance-1" class="level4">
 <h4 class="anchored" data-anchor-id="gi-statistics-using-fixed-distance-1">(1) Gi statistics using fixed distance</h4>
 <div class="cell">

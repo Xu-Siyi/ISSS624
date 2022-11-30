@@ -4,9 +4,9 @@ format: html
 editor: visual
 ---
 
-## Overviewd
+# 1 Data Preparation
 
-## 1 Import data
+## 1.1 Import data
 
 First of all we load the package that needed: sf, spdep, tmap, tidyverse,dplyr, funModeling
 
@@ -22,7 +22,7 @@ There are two dataset we used:
 
 change it to shorter name
 
-### 1.1 import waterpoint
+### 1.1.1 import waterpoint
 
 ```{r}
 #| eval: false
@@ -46,7 +46,7 @@ I add #eval: false to make sure the code chunk will only display
 wp_nga<-write_rds(wp,"geodata/wp_nga.rds")
 ```
 
-### 1.2 import Nigeria LGA boundary data
+### 1.1.2 import Nigeria LGA boundary data
 
 ```{r}
 
@@ -55,9 +55,9 @@ nga<- st_read(dsn="geodata",
              crs=4326)
 ```
 
-## 2 Data Wrangling
+## 1.2 Data Wrangling
 
-### 2.1 Recoding NA values into string
+### 1.2.1 Recoding NA values into string
 
 In the code chunk below, replace_na() is used to recode all the NA values in status_cle field into Unknown.
 
@@ -67,7 +67,7 @@ wp_nga <- read_rds("geodata/wp_nga.rds") %>%
   mutate(status_cle = replace_na(status_cle, "Unknown"))
 ```
 
-### 2.2 EDA
+### 1.2.2 EDA
 
 In the code chunk below, freq() of funModeling package is used to display the distribution of status_cle field in wp_nga.
 
@@ -76,11 +76,11 @@ freq(data=wp_nga,
      input = 'status_cle')
 ```
 
-## 3 Extracting Water Point Data
+## 1.3 Extracting Water Point Data
 
 In this section, we will extract the water point records by using classes in status_cle field.
 
-### 3.1 Extracting the functional water point data
+### 1.3.1 Extracting the functional water point data
 
 in this code chunk below, filter() is used to select functional water points
 
@@ -97,7 +97,7 @@ freq(data=wpt_functional,
      input = 'status_cle')
 ```
 
-### 3.2 Extracting non-funtional water point
+### 1.3.2 Extracting non-funtional water point
 
 In the code chunk below, filter() of dplyr is used to select non-functional water points.
 
@@ -116,7 +116,7 @@ freq(data=wpt_nonfunctional,
      input = 'status_cle')
 ```
 
-### 3.3 Extracting water point with Unknown class
+### 1.3.3 Extracting water point with Unknown class
 
 In the code chunk below, `filter()` of dplyr is used to select water points with unknown status.
 
@@ -130,7 +130,7 @@ freq(data=wpt_unknown,
      input = 'status_cle')
 ```
 
-## 4 Performing Point-in-Polygon Count
+## 1.4 Performing Point-in-Polygon Count
 
 The point-in-polygon (PIP) problem asks whether a given point in the plane lies inside, outside, or on the boundary of a polygon.
 
@@ -146,7 +146,7 @@ nga_wp <- nga %>%
     st_intersects(nga, wpt_unknown)))
 ```
 
-## 5 Saving the Analytical Data Table
+## 1.5 Saving the Analytical Data Table
 
 ```{r}
 #| eval: false
@@ -170,7 +170,7 @@ write_rds(nga_wp, "geodata/nga_wp.rds")
 
 There is only data file we use, nga_wp.rds, which is the combination of the geospatial and aspatial data.
 
-## 6 Visualising the spatial dsitribution of water points
+## 1.66 Visualising the spatial dsitribution of water points
 
 ```{r}
 #| fig-width: 14
@@ -184,7 +184,7 @@ unknown <- qtm(nga_wp, "wpt unknown")
 tmap_arrange(total, wp_functional, wp_nonfunctional, unknown, asp=1, ncol=2)
 ```
 
-#  2 Outliers/clusters analysis
+#  2 Outliers/Clusters Analysis
 
 ## 2.1 Global Spatial Autocorrelation
 
@@ -232,8 +232,6 @@ moran.test(nga_wp$`wpt functional`,
 
 p-value\<0.01, means we reject Null hypothesis.
 
-###### \*如何解释结果
-
 The code chunk below performs permutation test for Moran\'s I statistic by using moran.mc() of spdep. A total of 1000 simulation will be performed.
 
 ```{r}
@@ -268,8 +266,6 @@ hist(bperm$res,
 abline(v=0, 
        col="red") 
 ```
-
-###### \*什么意思
 
 ##### (2) Water-non fuctional
 
@@ -313,13 +309,11 @@ abline(v=0,
        col="red") 
 ```
 
-###### \*什么意思
-
 ## 2.2 Spatial Correlogram
 
 ### 2.2.1 Compute Moran's I correlogram
 
-#### (1) Water functional
+#### (1) Functional water points
 
 ```{r}
 MI_corr <- sp.correlogram(wm_q, 
@@ -334,7 +328,7 @@ plot(MI_corr)
 print(MI_corr)
 ```
 
-#### (2) Water non-functional
+#### (2) Not Functional water points
 
 ```{r}
 MI_corr <- sp.correlogram(wm_q, 
@@ -353,7 +347,7 @@ print(MI_corr)
 
 I use Local Indicators for Spatial Association (LISA) to detect cluster and/or outlier from functional waterpoint and Not Functional water points of Nigeria
 
-### 2.3.1 Functional waterpoint
+### 2.3.1 Functional water points
 
 #### 2.3.1.1  Computing local Moran's I
 
@@ -539,7 +533,7 @@ tmap_arrange(gdppc, LISAmap,
              asp=1, ncol=2)
 ```
 
-### 2.3.2 Not Functional Waterpoint
+### 2.3.2 Not Functional water points
 
 #### 2.3.1.1  Computing local Moran's I
 
@@ -725,7 +719,7 @@ tmap_arrange(gdppc, LISAmap,
              asp=1, ncol=2)
 ```
 
-# 3 Hot Spot Area analysis
+# 3 Hot Spot Area and Cold Spot Analysis
 
 ## 3.1 Getis and Ord's G-Statistics
 
@@ -812,7 +806,7 @@ summary(knn_lw)
 
 ## 3.4 Computing Gi statistics and Visualize Hot Spot Area
 
-### 3.4.1 Functional water point
+### 3.4.1 Functional water points
 
 #### (1) Gi statistics using fixed distance
 
