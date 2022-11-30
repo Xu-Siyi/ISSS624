@@ -25,7 +25,7 @@ change it to shorter name
 ### 1.1 import waterpoint
 
 ```{r}
-##| eval: false
+
 wp<- st_read(dsn="geodata",
              layer="geo_export",
              crs=4326) %>%
@@ -41,14 +41,14 @@ I add #eval: false to make sure the code chunk will only display
 [ref](https://quarto.org/docs/computations/execution-options.html)
 
 ```{r}
-##| eval: false
+
 wp_nga<-write_rds(wp,"geodata/wp_nga.rds")
 ```
 
 ### 1.2 import Nigeria LGA boundary data
 
 ```{r}
-#| eval: false
+
 nga<- st_read(dsn="geodata",
              layer="geoBoundaries-NGA-ADM2",
              crs=4326)
@@ -61,7 +61,7 @@ nga<- st_read(dsn="geodata",
 In the code chunk below, replace_na() is used to recode all the NA values in status_cle field into Unknown.
 
 ```{r}
-#| eval: false
+
 wp_nga <- read_rds("geodata/wp_nga.rds") %>%
   mutate(status_cle = replace_na(status_cle, "Unknown"))
 ```
@@ -83,7 +83,8 @@ In this section, we will extract the water point records by using classes in sta
 
 in this code chunk below, filter() is used to select functional water points
 
-```{wpt_functional <- wp_nga %>%}
+```{r}
+wpt_functional <- wp_nga %>%
   filter(status_cle %in%
            c("Functional", 
              "Functional but not in use",
@@ -147,6 +148,7 @@ nga_wp <- nga %>%
 ## 5 Saving the Analytical Data Table
 
 ```{r}
+#| eval: false
 nga_wp <- nga_wp %>%
   mutate(pct_functional = `wpt functional`/`total wpt`) %>%
   mutate(`pct_non-functional` = `wpt non-functional`/`total wpt`) %>%
