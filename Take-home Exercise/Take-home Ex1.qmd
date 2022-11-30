@@ -168,7 +168,7 @@ write_rds(nga_wp, "geodata/nga_wp.rds")
 
 There is only data file we use, nga_wp.rds, which is the combination of the geospatial and aspatial data.
 
-## 1.66 Visualising the spatial dsitribution of water points
+## 1.6 Visualising the spatial dsitribution of water points
 
 ```{r}
 #| fig-width: 14
@@ -182,7 +182,7 @@ unknown <- qtm(nga_wp, "wpt unknown")
 tmap_arrange(total, wp_functional, wp_nonfunctional, unknown, asp=1, ncol=2)
 ```
 
-#  2 Outliers/Clusters Analysis
+# 2 Outliers/Clusters Analysis
 
 ## 2.1 Global Spatial Autocorrelation
 
@@ -219,7 +219,7 @@ I use `moran.test()` of **spdep** to do Moran's I statistics testing
 
 #### 2.1.3.1 Maron's I test
 
-##### **(1)**  **Funtional waterpoint**
+##### **(1)** **Funtional waterpoint**
 
 ```{r}
 moran.test(nga_wp$`wpt functional`, 
@@ -230,7 +230,7 @@ moran.test(nga_wp$`wpt functional`,
 
 p-value\<0.01, means we reject Null hypothesis.
 
-The code chunk below performs permutation test for Moran\'s I statistic by using moran.mc() of spdep. A total of 1000 simulation will be performed.
+The code chunk below performs permutation test for Moran's I statistic by using moran.mc() of spdep. A total of 1000 simulation will be performed.
 
 ```{r}
 set.seed(1234)
@@ -347,7 +347,7 @@ I use Local Indicators for Spatial Association (LISA) to detect cluster and/or o
 
 ### 2.3.1 Functional water points
 
-#### 2.3.1.1  Computing local Moran's I
+#### 2.3.1.1 Computing local Moran's I
 
 I use shapeID column because there are duplication "Bassa, Ifelodun, Irepodun, Nasarawa, Obi, Surulere" in shapename column
 
@@ -437,7 +437,7 @@ nci <- moran.plot(nga_wp$`wpt functional`, rswm_q,
 
 the plot is split in 4 quadrants.
 
-##### (2)  Plotting Moran scatterplot with standardised variable
+##### (2) Plotting Moran scatterplot with standardised variable
 
 ```{r}
 nga_wp$Z.wpt_functional <- scale(nga_wp$`wpt functional`) %>% 
@@ -533,7 +533,7 @@ tmap_arrange(gdppc, LISAmap,
 
 ### 2.3.2 Not Functional water points
 
-#### 2.3.1.1  Computing local Moran's I
+#### 2.3.1.1 Computing local Moran's I
 
 I use shapeID column because there are duplication "Bassa, Ifelodun, Irepodun, Nasarawa, Obi, Surulere" in shapename column
 
@@ -623,7 +623,7 @@ nci <- moran.plot(nga_wp$`wpt non-functional`, rswm_q,
 
 the plot is split in 4 quadrants.
 
-##### (2)  Plotting Moran scatterplot with standardised variable
+##### (2) Plotting Moran scatterplot with standardised variable
 
 ```{r}
 nga_wp$Z.wpt_nonfunctional <- scale(nga_wp$`wpt non-functional`) %>% 
@@ -781,13 +781,13 @@ The summary report shows that the largest first nearest neighbour distance is 71
 ### 3.2.3 Computing fixed distance weight matrix
 
 ```{r}
-wm_d62 <- dnearneigh(coords, 0, 62, longlat = TRUE)
-wm_d62
+wm_d72 <- dnearneigh(coords, 0, 72, longlat = TRUE)
+wm_d72
 ```
 
 ```{r}
-wm62_lw <- nb2listw(wm_d62, style = 'B')
-summary(wm62_lw)
+wm72_lw <- nb2listw(wm_d72, style = 'B')
+summary(wm72_lw)
 ```
 
 ## 3.3 Computing adaptive distance weight matrix
@@ -811,7 +811,7 @@ summary(knn_lw)
 ```{r}
 fips <- order(nga_wp$shapeName)
 gi.fixed <- localG(nga_wp$`wpt functional`
-, wm62_lw)
+, wm72_lw)
 gi.fixed
 ```
 
@@ -878,7 +878,7 @@ tmap_arrange(gdppc,
 ```{r}
 fips <- order(nga_wp$shapeName)
 gi.fixed <- localG(nga_wp$`wpt non-functional`
-, wm62_lw)
+, wm72_lw)
 gi.fixed
 ```
 
