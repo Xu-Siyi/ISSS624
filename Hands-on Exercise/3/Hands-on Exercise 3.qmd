@@ -96,7 +96,7 @@ summary(ict_derived)
 
 Notice that six new fields have been added into the data.frame. They are RADIO_PR, TV_PR, LLPHONE_PR, MPHONE_PR, COMPUTER_PR, and INTERNET_PR.
 
-## 4 Exploratory Data Analysis (EDA) 
+## 4 Exploratory Data Analysis (EDA)
 
 ### 4.1 EDA using statistical graphics
 
@@ -416,7 +416,7 @@ ac <- function(x) {
 map_dbl(m, ac)
 ```
 
-With reference to the output above, we can see that Ward\'s method provides the strongest clustering structure among the four methods assessed. Hence, in the subsequent analysis, only Ward\'s method will be used.
+With reference to the output above, we can see that Ward's method provides the strongest clustering structure among the four methods assessed. Hence, in the subsequent analysis, only Ward's method will be used.
 
 ### 6.9 Determining Optimal Clusters
 
