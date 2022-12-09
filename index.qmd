@@ -1,5 +1,7 @@
 ---
 title: "ISSS624"
+author: "Xu Siyi"
+date: "`r Sys.Date()`"
 ---
 
 This is a Quarto website.

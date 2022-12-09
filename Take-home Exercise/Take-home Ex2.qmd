@@ -1,0 +1,63 @@
+---
+title: "Take-home Exercise 2: Regionalisation of Multivariate Water Point Attributes with Non-spatially Constrained and Spatially Constrained Clustering Methods"
+author: "Xu Siyi"
+date: "`r Sys.Date()`"
+format: html
+editor: visual
+---
+
+## Overview
+
+## Getting Started
+
+```{r}
+pacman::p_load(sf, tidyverse)
+```
+
+## Data Import
+
+### Import water point data
+
+```{r}
+#| eval: false
+wp<- st_read(dsn="Take home 2 data",
+             layer="geo_export",
+             crs=4326) %>%
+  filter(clean_coun=="Nigeria")
+```
+
+```{r}
+wp_nga<-write_rds(wp,"Take home 2 data/wp_nga.rds")
+```
+
+```{r}
+wp_nga$Geometry = st_as_sfc(wp_nga$`New Georeferenced Column`)
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
