@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.189">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Xu Siyi">
+<meta name="dcterms.date" content="2022-12-09">
+
+<title>ISSS624 - Take-home Exercise 2: Regionalisation of Multivariate Water Point Attributes with Non-spatially Constrained and Spatially Constrained Clustering Methods</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="../site_libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<script src="../site_libs/jquery-1.12.4/jquery.min.js"></script>
+<link href="../site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="../site_libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="../site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="../site_libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="../site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="../site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="../site_libs/leaflet-binding-2.1.1/leaflet.js"></script>
+<script src="../site_libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
+<script src="../site_libs/leaflet-providers-plugin-2.1.1/leaflet-providers-plugin.js"></script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">ISSS624</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false">Hands-on Exercises</a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercises">    
+        <li>
+    <a class="dropdown-item" href="../Hands-on_Ex1/Hands-on Exercise 1.html">
+ <span class="dropdown-text">Hands-on Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on Ex2/Hands-on Ex2.html">
+ <span class="dropdown-text">Hands-on Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on Exercise/3/Hands-on Exercise 3.html">
+ <span class="dropdown-text">Hands-on Exercise 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Hands-on Exercise/4/Hands-on Ex4.html">
+ <span class="dropdown-text">Hands-on Exercise 4</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false">In-class Exercises</a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercises">    
+        <li>
+    <a class="dropdown-item" href="../In-class_Ex/In-class_Ex1/In-class_ex1.html">
+ <span class="dropdown-text">In-class Exercises 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../In-class_Ex/in-class ex 2.html">
+ <span class="dropdown-text">In-class Exercises 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../In-class_Ex/In-class Ex3/In-class Exercise 3.html">
+ <span class="dropdown-text">In-class Exercises 3</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-take-home-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false">Take home Exercises</a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-take-home-exercises">    
+        <li>
+    <a class="dropdown-item" href="../Take-home Exercise/Take-home Ex1.">
+ <span class="dropdown-text">Take home Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Take-home Exercise/Take-home Ex2.html">
+ <span class="dropdown-text">Take home Exercise 2</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">About</a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">Getting Started</a></li>
+  <li><a href="#data-import" id="toc-data-import" class="nav-link" data-scroll-target="#data-import">Data Import</a>
+  <ul class="collapse">
+  <li><a href="#import-water-point-data" id="toc-import-water-point-data" class="nav-link" data-scroll-target="#import-water-point-data">Import water point data</a></li>
+  <li><a href="#importing-nigeria-lga-level-boundary-data" id="toc-importing-nigeria-lga-level-boundary-data" class="nav-link" data-scroll-target="#importing-nigeria-lga-level-boundary-data">Importing Nigeria LGA level boundary data</a></li>
+  <li><a href="#point-in-polygon-overlay" id="toc-point-in-polygon-overlay" class="nav-link" data-scroll-target="#point-in-polygon-overlay">Point in Polygon Overlay</a></li>
+  </ul></li>
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">Data Wrangling</a>
+  <ul class="collapse">
+  <li><a href="#checking-of-duplicated-area-name" id="toc-checking-of-duplicated-area-name" class="nav-link" data-scroll-target="#checking-of-duplicated-area-name"><strong>Checking of duplicated area name</strong></a></li>
+  <li><a href="#projection-of-sf-dataframe" id="toc-projection-of-sf-dataframe" class="nav-link" data-scroll-target="#projection-of-sf-dataframe"><strong>Projection of sf dataframe</strong></a></li>
+  </ul></li>
+  <li><a href="#exploratory-data-analysis-eda" id="toc-exploratory-data-analysis-eda" class="nav-link" data-scroll-target="#exploratory-data-analysis-eda">Exploratory Data Analysis (EDA)</a>
+  <ul class="collapse">
+  <li><a href="#eda-using-statistical-graphics" id="toc-eda-using-statistical-graphics" class="nav-link" data-scroll-target="#eda-using-statistical-graphics">EDA using statistical graphics</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Take-home Exercise 2: Regionalisation of Multivariate Water Point Attributes with Non-spatially Constrained and Spatially Constrained Clustering Methods</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Xu Siyi </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 9, 2022</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+</section>
+<section id="getting-started" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started">Getting Started</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, spdep, tmap, tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="data-import" class="level2">
+<h2 class="anchored" data-anchor-id="data-import">Data Import</h2>
+<section id="import-water-point-data" class="level3">
+<h3 class="anchored" data-anchor-id="import-water-point-data">Import water point data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>wp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"Take home 2 data/WPdx.csv"</span>,<span class="at">show_col_types =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="st">`</span><span class="at">#clean_country_name</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Nigeria"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p>I use <code>show_col_types = FALSE</code> to avoid warning message.</p></li>
+<li><p>To extract Nigeria data I use <code>filter()</code></p></li>
+</ul>
+<p>I saved it into wp_nga.rds. In this way I can delete geo_export data which is too large to git push.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>wp_nga<span class="ot">&lt;-</span><span class="fu">write_rds</span>(wp,<span class="st">"Take home 2 data/wp_nga.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>wp_nga <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"Take home 2 data/wp_nga.rds"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="convert-wkt-data" class="level4">
+<h4 class="anchored" data-anchor-id="convert-wkt-data">Convert wkt data</h4>
+<p>Column ‘<em>New Georaferenced Column</em>’ represent spatial data in a textual format. this kind of text file is popularly known as <strong>Well Known Text</strong> in short <strong>wkt</strong>.</p>
+<p><img src="images/paste-D42CF081.png" class="img-fluid"></p>
+<p>Two steps will be used to convert an asptial data file in wkt format into a sf data frame by using sf.</p>
+<p>First, <code>st_as_sfc()</code> of sf package is used to derive a new field called <em>Geometry</em> as shown in the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>wp_nga<span class="sc">$</span>Geometry <span class="ot">=</span> <span class="fu">st_as_sfc</span>(wp_nga<span class="sc">$</span><span class="st">`</span><span class="at">New Georeferenced Column</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we get the new column called Geometry.</p>
+<p><img src="images/paste-0F5EA02B.png" class="img-fluid"></p>
+<p>Next, <code>st_sf()</code> will be used to convert the tibble data frame into sf data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>wp_sf <span class="ot">&lt;-</span> <span class="fu">st_sf</span>(wp_nga, <span class="at">crs=</span><span class="dv">4326</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>When the process completed, a new sf data frame called <em>wp_sf</em> will be created.</p>
+</section>
+</section>
+<section id="importing-nigeria-lga-level-boundary-data" class="level3">
+<h3 class="anchored" data-anchor-id="importing-nigeria-lga-level-boundary-data">Importing Nigeria LGA level boundary data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>nga<span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn=</span><span class="st">"Take home 2 data"</span>,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">layer=</span><span class="st">"geoBoundaries-NGA-ADM2"</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">crs=</span><span class="dv">4326</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `geoBoundaries-NGA-ADM2' from data source 
+  `D:\Xu-Siyi\ISSS624\Take-home Exercise\Take home 2 data' using driver `ESRI Shapefile'
+Simple feature collection with 774 features and 5 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 2.668534 ymin: 4.273007 xmax: 14.67882 ymax: 13.89442
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+</section>
+<section id="point-in-polygon-overlay" class="level3">
+<h3 class="anchored" data-anchor-id="point-in-polygon-overlay">Point in Polygon Overlay</h3>
+<p>To make sure the data accuracy, we are going to use a geoprocessing function (or commonly know as GIS analysis) called <strong>point-in-polygon overlay</strong> to transfer the attribute information in <em>nga</em> sf data frame into <em>wp_sf</em> data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>wp_sf <span class="ot">&lt;-</span> <span class="fu">st_join</span>(wp_sf, nga)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we have column called “shapeName”, which is the LGA name of Nigeria water point.</p>
+<p><img src="images/paste-548FE3DC.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="data-wrangling" class="level2">
+<h2 class="anchored" data-anchor-id="data-wrangling">Data Wrangling</h2>
+<p><a href="https://jordan-isss624-geospatial.netlify.app/posts/geo/geospatial_exercise/#data-wrangling">Reference</a>: Ong Zhi Rong Jordan</p>
+<section id="checking-of-duplicated-area-name" class="level3">
+<h3 class="anchored" data-anchor-id="checking-of-duplicated-area-name"><strong>Checking of duplicated area name</strong></h3>
+<p>We use <code>duplicate</code> function to retrieve all the shapeName that has duplicates and store it in a list. From the result below, we identified <strong>12</strong> shapeNames that are duplicates.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>nga <span class="ot">&lt;-</span> (nga[<span class="fu">order</span>(nga<span class="sc">$</span>shapeName), ])</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>duplicate_area <span class="ot">&lt;-</span> nga<span class="sc">$</span>shapeName[ nga<span class="sc">$</span>shapeName <span class="sc">%in%</span> nga<span class="sc">$</span>shapeName[<span class="fu">duplicated</span>(nga<span class="sc">$</span>shapeName)] ]</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>duplicate_area</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Bassa"    "Bassa"    "Ifelodun" "Ifelodun" "Irepodun" "Irepodun"
+ [7] "Nasarawa" "Nasarawa" "Obi"      "Obi"      "Surulere" "Surulere"</code></pre>
+</div>
+</div>
+<p>Next, we will leverage on the interactive viewer of <code>tmap</code> to check the location of each area. Through the use of Google, we are able to retrieve the actual name and state of the areas. The table below shows the index and the actual name of the area.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Index</th>
+<th>Actual Area Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>94</td>
+<td>Bassa (Kogi)</td>
+</tr>
+<tr class="even">
+<td>95</td>
+<td>Bassa (Plateau)</td>
+</tr>
+<tr class="odd">
+<td>304</td>
+<td>Ifelodun (Kwara)</td>
+</tr>
+<tr class="even">
+<td>305</td>
+<td>Ifelodun (Osun)</td>
+</tr>
+<tr class="odd">
+<td>355</td>
+<td>Irepodun (Kwara)</td>
+</tr>
+<tr class="even">
+<td>356</td>
+<td>Irepodun (Osun)</td>
+</tr>
+<tr class="odd">
+<td>518</td>
+<td>Nassarawa</td>
+</tr>
+<tr class="even">
+<td>546</td>
+<td>Obi (Benue)</td>
+</tr>
+<tr class="odd">
+<td>547</td>
+<td>Obi(Nasarawa)</td>
+</tr>
+<tr class="even">
+<td>693</td>
+<td>Surulere (lagos)</td>
+</tr>
+<tr class="odd">
+<td>694</td>
+<td>Surulere (Oyo)</td>
+</tr>
+</tbody>
+</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"view"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>tmap mode set to interactive viewing</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(nga[nga<span class="sc">$</span>shapeName <span class="sc">%in%</span> duplicate_area,]) <span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="htmlwidget-aa2c6e36fc048c0d8f34" style="width:100%;height:464px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-aa2c6e36fc048c0d8f34">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"createMapPane","args":["tmap401",401]},{"method":"addProviderTiles","args":["Esri.WorldGrayCanvas",null,"Esri.WorldGrayCanvas",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["OpenStreetMap",null,"OpenStreetMap",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["Esri.WorldTopoMap",null,"Esri.WorldTopoMap",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"pane":"tilePane"}]},{"method":"addPolygons","args":[[[[{"lng":[6.70854125500006,6.70903050000004,6.71309285300003,6.71033476000002,6.69930404700006,6.69930423500006,6.70941582700004,6.72044662500002,6.73515456800004,6.74434717300005,6.74894331400003,6.75262011500007,6.75528286100007,6.75596374200006,6.75813576200005,6.76824772200007,6.76943789300003,6.78801146200004,6.79904222000005,6.82570041000002,6.84960081300005,6.88361299700006,6.91670606000002,6.96358783700003,6.96628717100003,6.97803095200004,6.98784250700004,6.99173052700007,6.99465475000005,7.00449416300006,7.01533531500007,7.05293444900008,7.07284550900005,7.11785511200003,7.19590317800004,7.25384082200003,7.30555392700006,7.39317835800006,7.40448517400006,7.43244234200006,7.44578674100006,7.43052683600007,7.42478081200005,7.41807742600002,7.40945886100008,7.39653009900007,7.38982666300006,7.38503832500004,7.37785616000002,7.37115276600002,7.35870315300002,7.35056312300003,7.34625378700002,7.34721144800005,7.34912673600007,7.34673252000005,7.33476206100005,7.32231275000004,7.31465160700003,7.29741373000007,7.28783738300007,7.27490889400002,7.26102313800004,7.24905260100007,7.23516653400003,7.21745006600003,7.20643716300003,7.19733958300003,7.18058056000007,7.17675024300007,7.16046991500002,7.14802085500003,7.13652894600006,7.12695263200004,7.11498203000002,7.10444796600007,7.09036170200005,7.07809989900005,7.06990143600007,7.06694555400003,7.04577880900007,7.01125023600002,6.99898106600006,6.99404913000006,6.98815332200007,6.98070943900007,6.97808078900005,6.97249322800008,6.96808569400002,6.96498829000006,6.96103799300005,6.94930883700005,6.93877465600002,6.91818539100006,6.90908753000002,6.87652790000004,6.85354425000003,6.84109455500004,6.83199694000007,6.82529342100003,6.82146322300002,6.82050509300007,6.81906896500004,6.82050522400004,6.82002628000004,6.81619601200003,6.81619585200002,6.81284423500006,6.81332314400004,6.81428051300003,6.81571721300003,6.81319895400003,6.80757712100007,6.79464863800007,6.78507228400002,6.77453793800004,6.76927080200005,6.76544033700003,6.75873705900005,6.75442735200005,6.73910512200007,6.73636347200005,6.73073759300007,6.72702629900004,6.72008591100007,6.70854125500006],"lat":[7.48585728900002,7.48872477700007,7.51251503100002,7.53825429600005,7.57410477900004,7.58973212100005,7.61730956800005,7.63753256800004,7.65040196700005,7.67062558700007,7.68901066700005,7.70739541900002,7.73032724300003,7.73560414700006,7.75243846200004,7.79380452700002,7.80043601000006,7.81127062200005,7.82322082200005,7.83333267500007,7.84987889200005,7.85723292200004,7.86458677100006,7.87929488000003,7.88680885600007,7.90160666600002,7.90951809800004,7.91936163800005,7.92527079000007,7.92827093700004,7.92832962900007,7.93227977400005,7.94274468400005,7.95902501400008,7.99302140700007,8.01504695400007,8.02558128400005,8.04186144900007,8.04296491500003,8.04569236600003,8.04486092400003,8.02270903100003,8.01456841000004,8.00738625700006,7.98966966000006,7.97482639000003,7.96094046600007,7.94896982200004,7.93556274900004,7.92694373200004,7.91401528500006,7.90012978700003,7.87475191400006,7.85990855900007,7.84698020200005,7.84171286100008,7.83213663500004,7.82351771900005,7.82016617700003,7.81154728500007,7.80484355300007,7.80292833500005,7.79957663200003,7.79478849800006,7.79143666600004,7.78856362700003,7.78473267600003,7.78090233000006,7.76845318200003,7.76270712700006,7.74115989300003,7.72535889700004,7.71578221600004,7.71195161900005,7.70285414100005,7.69902370300002,7.69734688900007,7.69948415100004,7.70220157700004,7.70350619400006,7.70051370400006,7.69792798800006,7.69666129400002,7.69615430600004,7.69588188000006,7.69260053400006,7.68910568300004,7.67671276800007,7.66852725600006,7.66286916300004,7.65800515800004,7.64252230100004,7.63294608900003,7.62720004300007,7.62432719700007,7.62001741000006,7.60900455400002,7.60134371600003,7.59128795300006,7.58219051400005,7.57117747900003,7.56207979600004,7.55681289600005,7.55346107500003,7.54723657400007,7.53670215000005,7.52521025200002,7.51515531600006,7.49887524500002,7.47541274900004,7.46487850800003,7.45298474400005,7.44476789500004,7.44189496400003,7.44381051400006,7.45195045800006,7.45865390800003,7.46823016500002,7.47732827600004,7.48020113300004,7.48115882700006,7.48194190300006,7.48220245300007,7.48402554900002,7.48444396400004,7.48585728900002]}]],[[{"lng":[8.82352165300006,8.82634280500002,8.82842536100003,8.85036495900005,8.85853570500007,8.87019270600007,8.88710984000005,8.89288133000002,8.89869335900005,8.90391833200005,8.90737629600005,8.91228602200005,8.91814350600004,8.92583470900007,8.92977062000006,8.93571565200006,8.93790529200004,8.94219674000004,8.94630986800007,8.94867786400005,8.95279128100003,8.95489228700006,8.95359204900006,8.95386048300003,8.94469153000006,8.93918994600006,8.93561188600006,8.93579006600004,8.93605704000004,8.93641395700007,8.93466831000006,8.93124659300003,8.93144805400004,8.92970209100002,8.92988031300007,8.93014735200006,8.93032670900004,8.93828475100003,8.94221901600002,8.94615438500006,8.95106682000005,8.96005888500002,8.96591645600006,8.96792861500006,8.97387581500004,8.97606561700007,8.97816679800007,8.97668957500002,8.97713467800003,8.97355766400005,8.97181151000007,8.97198982900005,8.97216812300007,8.97435767200005,8.97270186600002,8.97288016500005,8.97122500600005,8.96983622700003,8.96809202900005,8.96827036500002,8.96670342800007,8.96312495600006,8.96540521600002,8.96357088100007,8.96209331900008,8.96061585700005,8.96097261900007,8.95940605800007,8.95783898500002,8.95639688200004,8.95041476900008,8.94858191400004,8.94089016300006,8.93713360500004,8.93328833700002,8.92944247800006,8.92367343900003,8.91790555000006,8.91222595500005,8.90645697200006,8.90261175500007,8.90175809700003,8.89923660500006,8.88429711600003,8.86852680400006,8.85110320700005,8.84363764500006,8.82953610800007,8.82930346700005,8.82461447100007,8.81955194100004,8.81934079300004,8.81390747600005,8.80602632200004,8.80368827800004,8.79956543600002,8.79992205600007,8.80146082800007,8.80192307200002,8.80316065200003,8.80131987500005,8.78225106000002,8.77365019700005,8.77243449300005,8.76630047300006,8.76200734900004,8.75278741800003,8.74836775500006,8.73926475000007,8.72019713600002,8.70482290900003,8.69559748000006,8.69437323700004,8.69836752700007,8.69728761800008,8.69248075300004,8.68597740900003,8.66670458300007,8.65317188100005,8.64210293300005,8.62857137800006,8.62389952500007,8.61896826500003,8.61546522000003,8.62035577100005,8.62411223500004,8.62779037400003,8.63162116100006,8.63715016900005,8.63714224900002,8.63220766200004,8.63158342700007,8.63157105400006,8.62988594500007,8.63052012300005,8.63025202400007,8.62806235700003,8.62953857900004,8.62909433700003,8.62882733300006,8.62654769500006,8.62033346200008,8.61814335200006,8.61962120200008,8.62319950500006,8.62677792500006,8.62852314700007,8.63585767000006,8.63550099700007,8.63322165700004,8.62910931900007,8.62289510000005,8.61685969200005,8.61082354200005,8.61055673100003,8.61422261800004,8.61771285700007,8.62461878500005,8.62723854400002,8.63483972600005,8.64069815400006,8.65223491800003,8.66176033900007,8.66734989800005,8.67302968900003,8.67660810500007,8.67991918300004,8.67947381400006,8.67527227000005,8.67482674800004,8.67263599200004,8.66843404100007,8.66222070800006,8.66020890800007,8.65390606800003,8.64979250700003,8.64943595300002,8.64514443600007,8.64112082400004,8.63517473400003,8.63106168100006,8.62869358800003,8.62833711800005,8.62815859600005,8.62954731000002,8.63303663900007,8.63844880500005,8.64395040500006,8.64569476100007,8.64726078600006,8.64672689200006,8.64829246100004,8.64601342700007,8.64950258600004,8.65491600700005,8.66233896200004,8.66976330900007,8.67352037500007,8.68085493700005,8.68461103100003,8.68827934900003,8.69579237400006,8.69753656300003,8.70303832700006,8.70862857300006,8.71046237900003,8.71806434600006,8.72557762100007,8.72924498300006,8.73105731700002,8.73642819200006,8.75059223800002,8.76783618200005,8.78261594500003,8.78999926200004,8.79738034300004,8.79737250500006,8.79613342100004,8.78996888900002,8.78010459700005,8.77648336200002,8.77626233500007,8.77416018700006,8.77197057000006,8.77179231000002,8.77336413900002,8.77756138500007,8.78149614700004,8.78725715500008,8.78936498800005,8.79338921800007,8.79924658500005,8.80501553900007,8.80894947000007,8.81078333600004,8.81647008000004,8.82039844600007,8.82352165300006],"lat":[10.383281917,10.3827046440001,10.379380315,10.3705598500001,10.365847748,10.3576345390001,10.357919781,10.358066713,10.3582141410001,10.3569515190001,10.3561155570001,10.355179907,10.353509838,10.3538504960001,10.3520899970001,10.3485002030001,10.342800379,10.3333399150001,10.3277301690001,10.3181800360001,10.312580396,10.308810082,10.295240253,10.2894603990001,10.27940012,10.2733599960001,10.2674105410001,10.263560312,10.257779885,10.2500698310001,10.2461299990001,10.245111706,10.242140711,10.2285401460001,10.2246904850001,10.2189100480001,10.2150496460001,10.209610164,10.207860275,10.206100733,10.203115675,10.1970701160001,10.1954004040001,10.193559646,10.1899595950001,10.184269655,10.180499753,10.170780171,10.161149982,10.1551997230001,10.1512606000001,10.1474001620001,10.1435498870001,10.1378604970001,10.131990596,10.128140318,10.1222698340001,10.1106301310001,10.106690424,10.102840142,10.095050142,10.0890997400001,10.081480178,10.0794599290001,10.0697498380001,10.060030125,10.0523193810001,10.0445298830001,10.036740373,10.0337572670001,10.030619874,10.028599527,10.0282604810001,10.0261697,10.026000088,10.0258196770001,10.0255699000001,10.025309314,10.0231302670001,10.022870056,10.0227001060001,10.0221337030001,10.022133024,10.0163723860001,10.0130773450001,9.99497865500007,9.98510678800005,9.96700788400005,9.96453903100007,9.95939420500002,9.94998915600007,9.94913298700004,9.93835116200006,9.92810649100005,9.92540031500005,9.91774093400005,9.91003537100005,9.90816356800008,9.90428579100006,9.89208955900006,9.88233106500007,9.87256278900003,9.85182314400004,9.82864851300008,9.79998170900006,9.77985410000002,9.77009102700003,9.76389547000002,9.75666476900005,9.75604110200004,9.75237032900003,9.75114287000002,9.74443391700004,9.73371163300004,9.73366329300006,9.73344968300006,9.73316110000007,9.73404212100007,9.73585936000006,9.73340938900003,9.73400575300008,9.73608500400007,9.73983879000002,9.74239661500008,9.75148288900004,9.75358029700004,9.75761578300006,9.75901251900007,9.76633618300002,9.77426408300005,9.78767615800007,9.79621313300004,9.80841008700003,9.81919608200008,9.82336239100005,9.82914275100006,9.83483698600003,9.84455475600004,9.85418810300007,9.85996732200005,9.86758831900005,9.87696432000007,9.88265903600006,9.89237683800008,9.89832665900008,9.90427759100004,9.90821670000003,9.91626371400002,9.92397026600003,9.93159125900007,9.93719936200006,9.94657592300007,9.95209998600006,9.95762280000002,9.96340254500006,9.96742623300003,9.97530342100004,9.97700962800008,9.97765757800005,9.97992540000007,9.97825404300005,9.97876628200004,9.98112012200005,9.98522867000003,9.98741261400005,9.99336245700005,10.005089764,10.0147304280001,10.0222595710001,10.031890036,10.0375901140001,10.0451202990001,10.0544997210001,10.0563399800001,10.0676403750001,10.073249773,10.080960211,10.090419707,10.094099984,10.0977003730001,10.1033095550001,10.1128594690001,10.120559685,10.1244199660001,10.136059819,10.143940168,10.151900352,10.157939904,10.1618698350001,10.1696702190001,10.181219965,10.1890203350001,10.196640175,10.2045095980001,10.212479678,10.218600393,10.224719829,10.2268200770001,10.2348603890001,10.236960504,10.2409800020001,10.245180079,10.2491199080001,10.2551500820001,10.2592601750001,10.261279981,10.263540402,10.267740423,10.27176008,10.2729638220001,10.275022786,10.279301554,10.2848011040001,10.291517787,10.30554828,10.325676625,10.3397022460001,10.352508379,10.357993236,10.369573804,10.3752407540001,10.380029958,10.3837902060001,10.389490177,10.3933402970001,10.39507029,10.39360034,10.3918397360001,10.3892710010001,10.388330271,10.384650132,10.3829802430001,10.383230268,10.38148011,10.383489793,10.3859664130001,10.3839194940001,10.383281917]}]],[[{"lng":[4.66410688800005,4.64937108400005,4.64686623700004,4.63823153800007,4.60101310400006,4.59364079500006,4.58574386600003,4.58871011700006,4.58987368300006,4.59095989700006,4.59521467700006,4.60120467900003,4.65015533500002,4.66559663700002,4.68236783900005,4.68584389100005,4.69192444700008,4.69672508900004,4.70104218000006,4.70810546900003,4.72533752400005,4.73245139000005,4.74515491300002,4.75328491400006,4.75480944100002,4.75579660900007,4.75620064000003,4.75825974600002,4.75846088100008,4.76159431800005,4.76260506000006,4.76333222300002,4.76270165900007,4.76158937300005,4.76019672100006,4.75525330100004,4.74810770300007,4.73849183000004,4.71980806400006,4.71312449700002,4.69866037300005,4.69205469000002,4.67935138700005,4.67681457000003,4.68352562200005,4.69264646700003,4.70342584400004,4.72332667900002,4.76976105400007,4.78219896700006,4.80624528600003,4.81951229100002,4.83775418600004,4.85516738400003,4.86511758600005,4.87755540300003,4.91901500200004,4.94969513300003,4.98120396800005,4.98369168500005,4.97291237200005,4.94389052300005,4.93228198700007,4.91735642600003,4.88916400700003,4.88253069200005,4.88077638100003,4.87009280900003,4.86262994400005,4.84770495400005,4.83526706100002,4.82614571400006,4.81536625700005,4.81287869300007,4.80873295200007,4.80624527800006,4.80707458700005,4.80458695300007,4.80209928400006,4.80458682400007,4.81287860600003,4.82780402900005,4.83029168700006,4.83941264700007,4.85102129100005,4.85185056500006,4.85185045700007,4.85848423500005,4.86594674600002,4.87258054600005,4.87755536100002,4.87838463200006,4.87838462100007,4.88004303800005,4.87755543300005,4.88128710900003,4.88460347800003,4.89040805800005,4.89621204800005,4.90284586400003,4.90782073200006,4.90782070300003,4.90782064900003,4.90284587700006,4.89704137900003,4.89704124100007,4.89538283700006,4.89455364900004,4.89455371600008,4.90533356500003,4.92523388500007,4.95010947700007,4.96005956700003,4.96835192300006,4.98493522600006,4.99322749400005,4.99737317500006,5.01146937800007,5.02971167300007,5.05127050600004,5.05707451200004,5.07863388400006,5.08112158100005,5.09024244600005,5.09853419800004,5.10931348100007,5.12092220100004,5.13999354100002,5.15657763600006,5.16238151700003,5.19306188800005,5.20881594100007,5.23700852200005,5.25773799800004,5.27432196900003,5.29007673600006,5.30500216300004,5.31826913600003,5.32656095700003,5.33899884600004,5.35558265200007,5.37216628700003,5.38045847800004,5.40284642200004,5.40865053000005,5.41362584600006,5.42067372200006,5.42316157100004,5.42399069700002,5.42067386800005,5.41901535900007,5.42067386300005,5.42067390300002,5.42564919500006,5.43559941100006,5.44057406200005,5.44637876900003,5.43311160500002,5.41238203400007,5.39662739600004,5.38087280600007,5.37258104500006,5.35931403100005,5.34770532000005,5.34190083500005,5.33078949800006,5.32747327400006,5.32282960100002,5.32150272000007,5.32349304800005,5.32450471700002,5.32102736100006,5.31146290000004,5.30624614300007,5.29972505400002,5.29016119400006,5.28581372800005,5.28103154300004,5.27451092600006,5.26320737400005,5.25581689600006,5.24581802800003,5.23989578100003,5.23408028100005,5.22060390400003,5.20930061700005,5.19799768400003,5.18669473800003,5.17582614200006,5.17626102800006,5.17669584800007,5.17799984000004,5.17539170300006,5.16800128400007,5.15669763700004,5.15235031300006,5.14235150500002,5.13452683200006,5.12191904100007,5.10192149400007,5.08714046100005,5.06583884400004,5.04844953300005,5.03540694300005,5.02497375500008,5.01454024300006,4.99758527800003,4.98541301900002,4.97758774300007,4.96454570700007,4.95541626300007,4.94150497600003,4.93020206500006,4.92063761400004,4.90716074700003,4.89064122700006,4.88503021700006,4.86890465500005,4.85673194500003,4.83716870300003,4.82021432600004,4.80630258900004,4.80456408000003,4.80369419400006,4.80325988600003,4.80630251000002,4.80891140200004,4.80412910000007,4.79804281000003,4.78934807500002,4.77587130600006,4.76717656300002,4.75543884400003,4.74741889000006,4.74610473000007,4.74441528900007,4.73754882400004,4.73411561400007,4.72896625800007,4.71952539200004,4.71394637000003,4.70750952300006,4.70278880300003,4.69120214000003,4.67832846400006,4.67232035300003,4.66410688800005],"lat":[8.35635386900003,8.37312232700003,8.37483309100003,8.38069800300002,8.41307419100002,8.42065792000005,8.42369224400005,8.42628144100007,8.42824515800004,8.43036024300005,8.43218461900005,8.43268236700004,8.42218235500007,8.42023362400005,8.41446360800006,8.41024200800007,8.40306775000005,8.39545199700007,8.39251875300005,8.38833515800007,8.38735001600003,8.38684170900007,8.39141473800004,8.39548022500003,8.40361021400003,8.41496552000007,8.41527112700004,8.42675151700007,8.43302781400007,8.44643018200003,8.45380682000007,8.46199849300007,8.46908352500003,8.47043441900007,8.47232801100006,8.47308938600003,8.47464359000003,8.47644173800006,8.48004397000005,8.48152685000002,8.48592848400006,8.48846899700004,8.50218881500007,8.50681782400005,8.51869116100005,8.53030009700007,8.53776274800003,8.54937163800003,8.56595524500005,8.56595523500005,8.57258885900006,8.57507599500008,8.57673448800006,8.58005132400007,8.58834274100008,8.60243887900003,8.62482744900007,8.64058196000008,8.65633669500005,8.67623712200003,8.68784515200002,8.69862542100003,8.70857520700002,8.71603773700002,8.72764688800004,8.74340169900006,8.74644172900003,8.76496029100002,8.78320218400006,8.79895696500006,8.81388195500006,8.83046603100007,8.84622120800003,8.86114582600004,8.87938809200006,8.89514281500004,8.91421415300005,8.92831018100003,8.95152738100006,8.96230675200007,8.97474459300003,8.98469561900004,8.99049938900004,8.99215766200007,8.99796181000005,9.00708270500007,9.01371674300003,9.01620385800004,9.01786205300004,9.02035059600007,9.02117934500006,9.02947168100008,9.03361687800003,9.04273791300005,9.04771317200004,9.05434707900002,9.05766409700004,9.05683422800007,9.04273794900007,9.02781270500003,9.01952102600006,9.00376586200002,8.99381622100003,8.98635383800007,8.97557333300006,8.96645272800004,8.93826031500004,8.90758035300007,8.90177647400003,8.88270455100007,8.86694998400003,8.85617078900003,8.85285361100006,8.84787915500004,8.84290393700007,8.83627026600004,8.82880755500003,8.82963629000005,8.82631986300004,8.81719860000004,8.80724890600004,8.76744736300003,8.75666794300002,8.73759670700002,8.72930539700008,8.72598848100006,8.71686758700002,8.70940500300003,8.70028311200002,8.69447896500003,8.68950372300003,8.67872440100007,8.66048252600007,8.65550722300003,8.65633683400006,8.66960321800008,8.68535791300008,8.69779587800002,8.70525840400006,8.70940480900003,8.71355058800003,8.71603779800006,8.71603769800004,8.70442970400006,8.70028318500005,8.68618762200003,8.65882397100006,8.64058202500007,8.61321829200006,8.59165967100006,8.56927195000003,8.54854207700004,8.53361692700003,8.51620377800003,8.49215688100003,8.48552427000004,8.47971906000004,8.46645252300004,8.45235638400004,8.43826004300007,8.42084706400004,8.40923891900007,8.39514251800006,8.38270468400003,8.37524117100003,8.35567282800002,8.34903920400006,8.34439570800004,8.34107863600008,8.33709902800007,8.33378017100006,8.32508577600004,8.30856620200007,8.30074034300003,8.29552357200004,8.28422077800008,8.27856930800004,8.27378735600007,8.27074423000005,8.26813505500007,8.26552666900005,8.25726694000002,8.25506795000007,8.25465865300004,8.24944208000005,8.24857245400005,8.24944199800007,8.24726874400005,8.25205038000007,8.26422302900005,8.27900407500005,8.29248048400007,8.29900169800004,8.31378272200004,8.33638866800004,8.34595292700004,8.35942947000007,8.36421210800006,8.36508091900004,8.36464585600004,8.36421207600006,8.35942936400005,8.35290807800004,8.34986493100007,8.34856136000008,8.34812638500006,8.34638793800002,8.34682191400003,8.34899619000004,8.35334293100004,8.35551741600005,8.35638605300005,8.35986432300007,8.36551558000002,8.36986336700005,8.37029757000005,8.36984915000005,8.36855883700002,8.36768901000005,8.36290750700005,8.35899440400004,8.34725653400005,8.34204018200006,8.33421511100005,8.31682589200005,8.30204489800008,8.27769943000004,8.26291851100007,8.24813760500007,8.23379128300007,8.22292321300006,8.21596712500008,8.21075058300005,8.20971867900005,8.21234754500006,8.21572684200004,8.23074626100004,8.23804187000007,8.24533758200005,8.25606522700002,8.26808155300006,8.28224268100007,8.29468733300007,8.31528667300006,8.33545600500003,8.34403785700005,8.35635386900003]}]],[[{"lng":[4.72197676700006,4.71740202100005,4.71435257600007,4.71054031900007,4.70444112000007,4.69452955900005,4.68881130900007,4.68604029500005,4.67840795700005,4.67812876300007,4.67577385000004,4.67142713400006,4.67203808300007,4.66936970200004,4.66250797000004,4.65755227800003,4.64992803300004,4.64077896000003,4.63658576100005,4.63391681400003,4.62819909000007,4.62019341900003,4.61298058700004,4.61001940800003,4.60296613700007,4.60048730200003,4.59763821000007,4.59760042600004,4.59825720200007,4.60170847200004,4.60302198700003,4.60570771600004,4.60631836800007,4.60415097000003,4.60287382600006,4.60227628400003,4.59427124900003,4.58435969700002,4.57521053400006,4.56834799700005,4.56224915100006,4.55881837400006,4.55653141700003,4.56072471900006,4.56796742400007,4.57521063000007,4.58435961700008,4.59617705200003,4.60075191100003,4.60494516800003,4.61752506500005,4.62553029900005,4.64420985600003,4.65488342800006,4.66708235700003,4.67546892200005,4.67889977400006,4.67995177200004,4.68685821000003,4.69521559500004,4.70010347100003,4.70324834600007,4.70957494800007,4.71452412400004,4.71911962500008,4.72197676700006],"lat":[7.95898472800008,7.95521721700004,7.95254887800007,7.94683076100006,7.94149393700008,7.93158259000006,7.92853263900003,7.92704060900007,7.91682635600006,7.91090326600005,7.90321450300007,7.89750690700004,7.89460520600005,7.88888682100003,7.88278776800007,7.87745060300006,7.87058865400007,7.86334561000007,7.86334557300006,7.86105859300005,7.85724640100005,7.85000315200006,7.84341799500004,7.85054836300003,7.85603573400005,7.85879204400004,7.86328490600005,7.86641857400002,7.86990870600005,7.87343230800008,7.88041282900002,7.88949889700007,7.89681914100004,7.90271303300005,7.90608649300003,7.90680359600003,7.91175944600008,7.91671511400006,7.92205243200004,7.92624523600006,7.93501336500003,7.94339993300002,7.94797471100003,7.94759330100004,7.95064300300004,7.95521738900004,7.95788617000005,7.96093569300007,7.96017325200006,7.95864829000004,7.95750481600004,7.95674226000005,7.95483650400007,7.95559891900007,7.95941080600005,7.96627284900006,7.96894117800002,7.96890354100003,7.97055323000006,7.97308872000002,7.97349406600006,7.97353083600007,7.97047091000007,7.96565327800005,7.96117989900006,7.95898472800008]}]],[[{"lng":[5.05493012100004,5.05343960600004,5.04962734100008,5.04429059400007,5.03971568600002,5.03704746300002,5.03247261100006,5.02904167400004,5.02065512800004,5.01493694400006,5.00998164500004,5.00540692300007,5.00197607100006,4.99587682600003,4.98929554300003,4.98749018800004,4.98100944400005,4.97338536700005,4.96957294200007,4.96710632200006,4.96919199000007,4.97071650600003,4.96842954200002,4.96690472200004,4.96080544600005,4.95673851600003,4.94974993400007,4.94517558400003,4.93945744000007,4.92687757500005,4.91315370900003,4.89540809500005,4.88723130700004,4.87770128000005,4.86130911400005,4.85406638100005,4.85177896500005,4.85482882300005,4.85673474200007,4.85749720600006,4.85254148600006,4.85038130600003,4.84339231900003,4.83005002100003,4.81861350900004,4.81289527400003,4.80527117300005,4.79949175900003,4.80105887200006,4.80367047200002,4.80552895900007,4.80462230200004,4.80182188800006,4.79785420500002,4.79696920700007,4.79684610500004,4.79860810300005,4.79849822500006,4.79728273700005,4.79533143600003,4.78026710900002,4.76980512100005,4.75897704000005,4.75628539600007,4.75220575700007,4.74632128300004,4.74244879200006,4.74238642800003,4.74310838200006,4.74610473000007,4.74741889000006,4.75543884400003,4.76717656300002,4.77587130600006,4.78934807500002,4.79804281000003,4.80412910000007,4.80891140200004,4.80630251000002,4.80325988600003,4.80369419400006,4.80456408000003,4.80630258900004,4.82021432600004,4.83716870300003,4.85673194500003,4.86890465500005,4.88503021700006,4.88542419500004,4.88542405500004,4.88368513900002,4.88194655000007,4.88064242400003,4.88064246700003,4.88238091700004,4.88281589100006,4.88803243600006,4.89716199800006,4.89977026600007,4.90498734300007,4.91976836300006,4.93367953900002,4.94411319600005,4.95759016100004,4.96411080900003,4.97802252100007,4.98541314200003,5.00627997100003,5.01193192600005,5.02149585900003,5.04410207800004,5.06192597300003,5.07322943800006,5.08105431100006,5.08931437600006,5.09627012000004,5.10322569400006,5.11278967800007,5.11931073600005,5.12452757900007,5.12800551100003,5.13756955400004,5.14669905500006,5.15322021900005,5.16061055900008,5.16582714700007,5.17321778100006,5.18191255300007,5.18017341900003,5.17756498400007,5.17756518600004,5.17582612000007,5.17533098700005,5.17640680900007,5.17646280500003,5.17303797400007,5.16691887100006,5.16494279100004,5.16408812800006,5.15148107800007,5.13409175400005,5.12757075500002,5.11278971900003,5.09887605600005,5.09439082400007,5.08716058800007,5.08586518700002,5.08366262900006,5.07757654300002,5.07366384600004,5.06975125100007,5.06648547200007,5.062943,5.05493012100004],"lat":[8.04919038200006,8.05776301400005,8.06462485300005,8.06996157600003,8.07186804100007,8.07072453200004,8.06805599900002,8.06386283900002,8.05928796900002,8.05471329600005,8.05013947700007,8.04327687300002,8.03412818600003,8.03222167900003,8.03403953400004,8.03222181200005,8.02574161500007,8.01811704700003,8.01735499800003,8.02004633500007,8.02421660600004,8.03260324600006,8.03755944900007,8.04670811600005,8.05242636300005,8.05354841600007,8.05547610800005,8.06081302900003,8.06805623700006,8.07987295200007,8.08559121800005,8.08935643200005,8.09092917200007,8.09130962800003,8.09474080800004,8.09550272900003,8.09169096800002,8.08597291500007,8.07911110600003,8.07263086000006,8.06805601000002,8.06661593500007,8.06195641400006,8.05547617800005,8.05356973800002,8.05928790600007,8.06386270000007,8.06501831800006,8.06748135900006,8.07361824900005,8.07860153300004,8.09080532000007,8.10107897000006,8.11286604100007,8.12316152800003,8.13384746600008,8.14722672400006,8.15676781000008,8.16247920800004,8.16551044300007,8.17564351000004,8.18544744700006,8.19371981500007,8.19445229000007,8.19524388900004,8.19433720500007,8.19772741200006,8.20307050100007,8.20689561200004,8.21234754500006,8.20971867900005,8.21075058300005,8.21596712500008,8.22292321300006,8.23379128300007,8.24813760500007,8.26291851100007,8.27769943000004,8.30204489800008,8.31682589200005,8.33421511100005,8.34204018200006,8.34725653400005,8.35899440400004,8.36290750700005,8.36768901000005,8.36855883700002,8.36984915000005,8.36551578700005,8.36160270500005,8.35073471100003,8.33943181100005,8.32421587500005,8.31465245200008,8.30508813000006,8.29552362100003,8.28509052400005,8.27030953100007,8.26074492200007,8.25292005000006,8.23118303400003,8.22118470700002,8.20901212700005,8.19336142400005,8.18423180900004,8.17640680400007,8.17032061800006,8.15423500800006,8.15032304100004,8.14858338000005,8.14423648600007,8.14510623300004,8.14510641600003,8.14858331600004,8.15466973300005,8.15858266100003,8.15901755100003,8.16336442100004,8.17075534200006,8.18031980200004,8.18684008500003,8.19379615900004,8.19988245400003,8.19988261200007,8.19988239200006,8.19727410500008,8.19596956700008,8.19249158100007,8.18205843000004,8.17162500900002,8.16597268400005,8.15988720000007,8.15899617100007,8.15440168700007,8.14905881100003,8.14673292200007,8.14552422400004,8.14465646600007,8.14380180100005,8.13554185800007,8.11858756700008,8.11119660500003,8.09772009400007,8.08501651700004,8.08292787100004,8.07827074000005,8.07286429500004,8.07076645200004,8.06641972100005,8.06337644200005,8.05685517900002,8.05446808000005,8.05283361700003,8.04919038200006]}]],[[{"lng":[4.54334925200004,4.53785184600002,4.52984661300007,4.52184105900005,4.50697370900002,4.50125543600006,4.49286892300006,4.48676963900004,4.48518328600005,4.48143291200006,4.47685806500004,4.47304623700006,4.47075895100005,4.46656559200005,4.46199085300003,4.46084739300005,4.46160986300004,4.46542170100003,4.46479462000002,4.46885296000005,4.46968596600004,4.47110910000004,4.47242830000005,4.47375276400004,4.47621992100005,4.47778061000002,4.47998988300003,4.48108367700007,4.48237843100003,4.48277740700007,4.48623001700003,4.48750575100007,4.48985113600003,4.49264694000004,4.49479698600004,4.49848050600002,4.50305183900002,4.50854321700007,4.51250352200003,4.51803242800003,4.52765625200004,4.53324189000006,4.53672556000004,4.53960031700007,4.54302838100006,4.54287503600005,4.54276337800007,4.54266114200004,4.54269699000002,4.54334925200004],"lat":[7.87124484500004,7.86182068900007,7.85610280800006,7.85152809500005,7.84276060300004,7.83894838900005,7.82827415900005,7.81798160200003,7.81571472500002,7.81035744900004,7.80654534300004,7.80616438400006,7.80845168800005,7.81264497200004,7.81798163300004,7.82370002500005,7.82865578600007,7.83437403700003,7.84262510200006,7.84695378300006,7.84773464700004,7.84782708100005,7.84784333600004,7.84742137000006,7.84350659000006,7.84177236100004,7.84092268200004,7.84137441500008,7.84336306100005,7.84665555300006,7.85195827000007,7.85548081100006,7.86142718500003,7.86650248600006,7.870474,7.87490258400004,7.87868468400006,7.87919011400004,7.87901922100002,7.87645667600003,7.87530285400004,7.87887735100003,7.88172517200007,7.88439458000005,7.88498834000006,7.88423000200004,7.88067346800006,7.87634390100004,7.87340746000007,7.87124484500004]}]],[[{"lng":[8.55458898600006,8.55491909800003,8.557003,8.56000947100006,8.55953097700007,8.55416870800008,8.55130969400005,8.54761682500003,8.54583010700003,8.54428151800005,8.54296943500003,8.54320506300007,8.54391549300004,8.54367585300002,8.54021849500003,8.53843109700006,8.53723720700003,8.53783113900005,8.53832608200003,8.53937546800006,8.54603298300003,8.54864846900006,8.54941464300003,8.55185522000005,8.55553959800005,8.55758687500003,8.55985521500003,8.56105056400003,8.56212347200005,8.56319525600003,8.56664718300004,8.57319522900002,8.57784095100004,8.58105795800003,8.58308359600005,8.58344362200006,8.58547276400003,8.58869130300008,8.59322102800007,8.59536638600002,8.59632056100003,8.59639407000003,8.60087559800007,8.60421250500002,8.60579799300007,8.61021806200006,8.61231284200005,8.61301249900004,8.61299586000007,8.61046548900003,8.60884437600004,8.60838418600002,8.60885530400003,8.60978764600003,8.60799909900004,8.60579297300006,8.60294178000004,8.60242286800008,8.60021571200002,8.59465219100002,8.59159752300008,8.58990214200003,8.58343293500008,8.58161547800006,8.57625290100003,8.57315533900004,8.57089120000006,8.57005423500004,8.56516723900006,8.56254365300003,8.56396898100007,8.56741172900007,8.56657652000007,8.56526671700004,8.56383809000005,8.56133720900004,8.55955202700005,8.55657462900007,8.55458898600006],"lat":[11.9944124510001,11.9959603500001,12.003029686,12.010770731,12.0109328790001,12.0129208860001,12.013504472,12.0140864470001,12.0143187420001,12.014434371,12.0161926860001,12.018070423,12.0213566900001,12.022646819,12.025107012,12.0258087710001,12.027919207,12.029445396,12.030348299,12.0322632030001,12.0422444920001,12.046237037,12.046761136,12.050348908,12.044856609,12.042258417,12.0380372930001,12.034166866,12.033346635,12.0334648640001,12.035463852,12.037817815,12.0377061500001,12.0366538390001,12.0357171150001,12.0333711280001,12.029853551,12.027392655,12.024229769,12.0228241630001,12.0214172720001,12.0177274210001,12.014949707,12.0130973010001,12.0127594300001,12.012076501,12.0111622750001,12.009558462,12.005833484,11.99855609,11.9921378440001,11.9870954190001,11.9820539730001,11.979992754,11.977879521,11.9743098610001,11.9712643560001,11.9707095630001,11.9671404220001,11.9601805400001,11.9597800080001,11.962140355,11.9651163,11.966371345,11.9697682020001,11.9711726100001,11.9723434810001,11.9750408940001,11.978555644,11.9814853980001,11.9850075040001,11.9938112020001,11.994983705,11.9949821770001,11.9946285070001,11.994625565,11.993685026,11.9936814870001,11.9944124510001]}]],[[{"lng":[7.49322846500007,7.49600078700007,7.50197955300007,7.51849692600007,7.53458723000006,7.54644365100006,7.56621229300004,7.58005469400007,7.58598051700005,7.61952674100007,7.65111742800002,7.68074409800005,7.69585121600005,7.69822575900002,7.70967826100002,7.72553582300003,7.74315505100003,7.75989351700002,7.79160815600005,7.80658478500004,7.83125197900006,7.83741832900006,7.84534729300003,7.86120527500003,7.87618162600006,7.89996758400002,7.91494402700005,7.92819456700005,7.92781103100003,7.91877972200007,7.90659926200004,7.90662066100003,7.91120630400007,7.93539776200004,8.04325661200005,8.08453299000007,8.06532587000004,8.05827833600006,8.06109690500006,8.06603047500005,8.07801151400002,8.09140178400003,8.09985925500007,8.11536507400007,8.12946061900004,8.14637489700004,8.15624127500007,8.16399393000006,8.16187979300003,8.16610802500003,8.16822232200008,8.16822230200006,8.16258411000007,8.15271765000006,8.13509860400006,8.11254521400002,8.09422104000004,8.08435448500006,8.06180177600004,8.05968757700003,8.04982097100003,8.04770655500005,8.05052568100007,8.05263979600005,8.05545925700005,8.06109713400002,8.06291611600005,7.96490201900002,7.91804146100003,7.87990732800006,7.87034842600002,7.86725974600006,7.83841776200006,7.81097223300003,7.78259547900007,7.76073224900006,7.73840297300006,7.69746667700002,7.67683773100003,7.67722582800008,7.66567591700004,7.62491403400003,7.58347253500006,7.54271052100006,7.50534509900007,7.45099565700002,7.44578674100006,7.43244234200006,7.40448517400006,7.40088328500002,7.39366389900005,7.38965322500007,7.38323629700005,7.38163190200004,7.38163194100002,7.38804920700005,7.39286173100004,7.39927920400004,7.40890469000004,7.41612413500008,7.42574932500003,7.43296855500006,7.43216622300002,7.43136422800006,7.43216586000005,7.43457282300005,7.43216609800004,7.43216620500004,7.43697867200007,7.44259413900005,7.44259387200003,7.43858310600007,7.43136392800005,7.43184703400004,7.43610692700003,7.44592942200006,7.49411642400003,7.52757915300003,7.54630257200006,7.58374690500005,7.59159839500006,7.59057706200002,7.57473215500005,7.56480579700008,7.54893539700004,7.52604004000005,7.51878497600006,7.51767904000007,7.51711716500006,7.51237926200002,7.49954526900007,7.49322846500007],"lat":[8.65073673300003,8.65430174400007,8.66865155800002,8.69868651100006,8.70275521500002,8.70182002600006,8.69796888700006,8.69409389400005,8.69411668800007,8.70308330100005,8.70712893100006,8.70821836000005,8.70910681900006,8.70825201300005,8.71089545200005,8.71353826400002,8.70737164000008,8.70384787300003,8.69944289000006,8.69415655400007,8.68094241300003,8.67301372500003,8.66948981400003,8.66772744300005,8.66067968200002,8.65451330200005,8.65539463400006,8.65193572300007,8.65155201900006,8.61910382500002,8.55033362700004,8.54320089400005,8.53543322000007,8.50956661400005,8.38665901800005,8.35188723600004,8.33930218800003,8.32520668500007,8.31815901300007,8.31534005100002,8.30829250000005,8.30617809000006,8.30899704200004,8.30970203900006,8.30194951700003,8.29983520600007,8.29419720400006,8.27869120100007,8.25684357300003,8.23711002600004,8.21314709400002,8.18777560800004,8.16169930800004,8.15112794200007,8.13773628100006,8.12505045800003,8.10884082800004,8.10531717000003,8.09051691200006,8.08205899500007,8.05739210800004,8.02920147400005,8.00805764000006,7.98832420200006,7.96506644500005,7.93264727400003,7.92698881300004,7.95957629600002,7.97571385100002,7.98536301500008,7.98533376900002,7.98621601800005,7.98528569700005,7.99133295300004,7.99877657500002,8.00342852700004,8.00621891200007,8.01366239800006,8.01447117800006,8.01662625400007,8.01934346100006,8.02953420700004,8.03768619400006,8.04312135900005,8.04719822100003,8.04651837700004,8.04486092400003,8.04569236600003,8.04296491500003,8.05016903700005,8.07022181400004,8.08786864100006,8.10391148200006,8.11835010500005,8.14482019500002,8.16888441500004,8.19214525100006,8.20578191300007,8.22583486800005,8.24588877300005,8.25792020800003,8.26834864900007,8.27396307200007,8.28358842800003,8.29160975300005,8.30043328000005,8.30845449000003,8.31727796700005,8.32610126300006,8.33412261000007,8.34535315700003,8.35497847400006,8.38144887000004,8.39691248500003,8.40573680500006,8.41658226700002,8.45803385500005,8.48174117800005,8.48967290800005,8.50651561900003,8.51833169400004,8.52716724400005,8.53987435000005,8.55358605400005,8.57218489600007,8.61825544200008,8.63608769700005,8.63880621900006,8.64018648800004,8.64695461700006,8.65016266600003,8.65073673300003]}]],[[{"lng":[8.19191889500007,8.18823885200004,8.16870144600006,8.15986276600006,8.14962887000007,8.12915989400005,8.12347316900002,8.11672390300004,8.11281007600007,8.10970817600003,8.10914370000006,8.10498887300002,8.10217592600003,8.10031812800003,8.09985355300006,8.10078336400005,8.10264375200006,8.11008732300007,8.13520692000003,8.14358068700005,8.15288421000002,8.16451431100006,8.17599337600006,8.19445011300007,8.19984417100005,8.19980858800005,8.20085928600002,8.20191956100007,8.20624728800004,8.22579773200005,8.24811047200006,8.25103834200007,8.26918147300006,8.27476321900002,8.27615928300003,8.28360156300005,8.29430090700004,8.29848772100007,8.31290936600004,8.33430765500003,8.34678324400005,8.36701758900006,8.37897223100003,8.39853967200003,8.40180679300005,8.41038612400007,8.40780743200003,8.40548147600003,8.40548152100007,8.40175939200003,8.39385110900002,8.38733889500003,8.38361723200006,8.37896541500004,8.36640556600003,8.36203861600006,8.36185765900007,8.34451834800007,8.33692863900006,8.31631061500002,8.28052345900005,8.27293313300004,8.26533918900003,8.25991178500004,8.25555630000002,8.25445126200003,8.25116571300003,8.24788436800003,8.24352423900007,8.23264235100004,8.21420319200007,8.20545095900007,8.19191889500007],"lat":[6.96938505600002,6.96978270900007,6.97536525300006,6.97908695700005,6.98048218000002,6.98652981400005,6.98795287700005,6.98901554600008,6.98914087600002,6.98845914400005,6.98822238000002,6.98860024800007,6.98888385700008,7.00281133500005,7.00978892100005,7.01444097000007,7.01723199100007,7.01862766900007,7.01955782300007,7.02188384100003,7.02607059900004,7.02839658900007,7.03279708200006,7.04562341200005,7.06190834900002,7.07818109100003,7.09445646800003,7.10639238700003,7.11399592000004,7.11403771000005,7.12151804400003,7.12468998600002,7.14376318800004,7.14655393500004,7.14422801000006,7.13492451800005,7.12887675200005,7.12375976400006,7.11631669100006,7.10933932000006,7.10417654300005,7.10237502700005,7.09805600300007,7.08724007900003,7.08182087400007,7.06420082600005,7.05165578600003,7.02607067200006,7.01490591300006,7.00699796800006,6.99536809400007,6.98699479200007,6.97955177000006,6.96838761900005,6.95164055500004,6.94886149700005,6.94722958300002,6.92984102000003,6.92440306200007,6.92002569200002,6.90151409100002,6.89715961300004,6.89497485900006,6.89496394100007,6.90146423400006,6.91122608200004,6.92532269300006,6.93724968700008,6.94591970300007,6.95783049300007,6.96750520800003,6.96792235100003,6.96938505600002]}]],[[{"lng":[9.00857616900004,9.00898831300003,9.00939248700007,9.00951213200005,9.00973777300004,9.00988289200006,9.01017977300006,9.01189623600004,9.01282594400004,9.01307487400004,9.01329430800007,9.01597011200005,9.01952116000007,9.02070395200008,9.01715275100003,9.00294869600003,8.98874519100002,8.97454200900006,8.95915523400004,8.95642233800004,8.95995309700004,8.96083913900003,8.96151896900005,8.96165820600004,8.95912265600003,8.95470881600005,8.94440953700007,8.92969587500005,8.91547406400002,8.89095196400007,8.88408579200006,8.88171536300007,8.84077600500007,8.83130423500006,8.82183516100002,8.80763395000002,8.80053418700004,8.78757601200005,8.76736192800007,8.74480152500007,8.72714627300007,8.69330608100006,8.66142741300007,8.64230084800005,8.62170241600006,8.59667076100004,8.58868888900003,8.55316512700006,8.54249556700006,8.53063924400004,8.51995620600007,8.50690869500005,8.50405203300005,8.49150552000003,8.46508188100006,8.45948624100004,8.45353419600002,8.44353022700005,8.45085837700003,8.45502133300005,8.45718618000006,8.45984899500007,8.46167813900007,8.46500500600007,8.46966383700004,8.47498820300007,8.48297584200003,8.48963305000007,8.49321599000007,8.50325597100004,8.52220818500007,8.53641725600005,8.53980162200003,8.54341316400007,8.54423426700004,8.54760001100004,8.54883226200008,8.55022711400005,8.55137498400006,8.55235749200006,8.55342259600008,8.55481544600002,8.55571632000004,8.55784913700006,8.55875186700007,8.55875107600002,8.55792879600006,8.55735275300003,8.55743252700006,8.55890242200007,8.56004664800003,8.56011162100003,8.56480586200007,8.56536642000003,8.56657828400006,8.56853828300007,8.57376920600007,8.58575811600002,8.60581104300007,8.61627155500003,8.62193661500004,8.62433175400002,8.62585584200002,8.62781523400002,8.63064597500005,8.63413276800003,8.64293027900004,8.64523047300003,8.64745112400004,8.65091729800002,8.65750432100003,8.66486082300003,8.67285077800005,8.67638693000004,8.68055461500006,8.68557095000006,8.69363213100007,8.69718460900003,8.70066270500007,8.70299315600005,8.70605728400005,8.71122642500006,8.71537580700004,8.71922751000005,8.72469448400005,8.72858515300004,8.73254107500003,8.73931192100002,8.74921587700004,8.75303477400007,8.75902466300005,8.76058558800003,8.76362329800003,8.77079464200006,8.77561374600003,8.78060333500002,8.78528387900008,8.79588131800006,8.80169197600003,8.80351823400002,8.80904862200003,8.81373615600006,8.81892285300006,8.82547884200005,8.82940214000007,8.83302487100002,8.83648292900006,8.83921075500007,8.84118530000006,8.84754840600004,8.85686691200004,8.86322711500003,8.86662014500007,8.87151440300005,8.87475381400003,8.87811634700006,8.88286014400006,8.88528712400006,8.89414024800004,8.90135010300003,8.90591040400005,8.90930774200007,8.91134627900004,8.91424732700006,8.92209449000006,8.92738750400002,8.93029804200006,8.93386553500005,8.93599706100002,8.94182500100004,8.94514550500003,8.94756043600006,8.95218641300005,8.95565691200005,8.95985249500006,8.96375002100007,8.96755497600003,8.96958151900003,8.97239683200007,8.97771280200004,8.98143770200005,8.98811063200003,8.99511342900007,9.00087158600007,9.00857616900004],"lat":[8.40040402600005,8.39678476800003,8.39323615200004,8.38654326700004,8.37389665300003,8.36577233500003,8.36359608900005,8.35100932000006,8.34419263900003,8.33597562300002,8.32873709300003,8.30830535800004,8.29298527200007,8.28002235100007,8.27648718400008,8.26941659500005,8.26234573100004,8.25880967100005,8.25409467200006,8.25409435800003,8.25554654300004,8.26032834100005,8.26713181400004,8.27081213500003,8.28141678100008,8.28141682100005,8.27994527500005,8.27602200100006,8.27455056100007,8.27307990200006,8.27602205200003,8.27626711900007,8.30002203200007,8.30355315800006,8.30119188500004,8.29411404200005,8.28939638000003,8.27803091300007,8.26572323400006,8.25934707600004,8.25836663700005,8.25983810100007,8.26474189900006,8.26327033200005,8.25983813100004,8.25301124600003,8.25504529600005,8.26796702900003,8.28091677100002,8.29622179400008,8.31859863000005,8.33743663100006,8.33822225300003,8.34684316100004,8.35459547600004,8.38332943600005,8.40453264200005,8.42513088200008,8.42017965500003,8.41819863400002,8.41687721900007,8.41671527500006,8.41738054800004,8.41821328000003,8.41838560500003,8.41855880300005,8.41823896100004,8.41708922100003,8.41593991800005,8.41167376000004,8.40698497200003,8.40700314100008,8.40553217100006,8.40398515900006,8.40349651700006,8.40186777500003,8.40039944000006,8.40015616000005,8.40081084100007,8.40203662000005,8.40350778000004,8.40489737400003,8.40604140200003,8.40596230800003,8.40604505300007,8.40669831300005,8.40816689600007,8.40979907900004,8.41143234600003,8.41723100100006,8.42049815600006,8.42124078600006,8.43178536400006,8.43743006700004,8.44122506400004,8.44339709800005,8.44513892800006,8.44775635800005,8.45363684500006,8.45907209100005,8.46320042300005,8.46624061000006,8.46862889600004,8.47188534500003,8.47557694700004,8.47753315000006,8.47896698300002,8.47890478500005,8.47884477400004,8.47875115600004,8.47857283500002,8.47661105100002,8.47746759700004,8.47784707100004,8.47759161400006,8.47844782800007,8.47982417500003,8.48043063500006,8.48102487100005,8.48144917800005,8.48200601300005,8.48010145500007,8.47857295900008,8.47634232400003,8.47317789400006,8.46806994600007,8.46287836000005,8.46088698000005,8.45797450600003,8.45491985400002,8.45012774300005,8.44869621200007,8.44591247900007,8.43933773500004,8.43721110000007,8.43099988000006,8.42860516100006,8.42318332300005,8.42021092200002,8.41899295000007,8.41530598800006,8.41292757600007,8.41029562200004,8.40696917300005,8.40402593200002,8.40384478800007,8.40367227500008,8.40353587300007,8.40295494700007,8.40108401700007,8.40059273000003,8.40162081500006,8.40216908600007,8.40295972900003,8.40284359300006,8.40297808400004,8.40206443300002,8.40333075900003,8.40794949400004,8.40704817600005,8.40647804800005,8.40607823800002,8.40583884000006,8.40549763900003,8.40304568300007,8.40370737700005,8.40407073600005,8.40451612900006,8.40479482400002,8.40555473100005,8.40600479100004,8.40605177000003,8.40614224700005,8.40620993700003,8.40629208100006,8.40604975800005,8.40581220000007,8.40568636100005,8.40481292600003,8.40319735600002,8.40206423500007,8.40165621800003,8.40122801300004,8.40087513700007,8.40040402600005]}]],[[{"lng":[3.34169247200003,3.33980057500003,3.33542466400007,3.33456086900003,3.33383836600007,3.33306677000007,3.33186456400006,3.33176289200003,3.33110491200006,3.33033682100006,3.32914136200003,3.32882094300004,3.32794770800007,3.32607907300007,3.32520071600004,3.32466156100003,3.32407738100005,3.32106448000008,3.31645892000006,3.31893945300004,3.32686852500007,3.32829166500005,3.32849499900004,3.32686853700005,3.32442876500005,3.32239583800003,3.32331064400006,3.32354770600006,3.32392802900006,3.32417054000007,3.32447981600006,3.32496987900004,3.32548707900003,3.32620849000006,3.32683822700005,3.32756617900003,3.32824529000004,3.33030807200004,3.33174495100008,3.33213531300004,3.33397809200005,3.33447225400005,3.33510698700007,3.33725782400006,3.33841845900002,3.34106337600002,3.34354289000004,3.34590198100005,3.34679042500005,3.34846624800002,3.34900329000004,3.34910684400006,3.34955659500002,3.35018937800004,3.35102553700006,3.35153310100003,3.35248370800002,3.35319428200006,3.35372591100003,3.35474266400007,3.35540197400007,3.35619503000004,3.35670390000007,3.35763891700003,3.35808433800003,3.35923556600005,3.36027468000003,3.36081529600005,3.36183789600005,3.36253106000004,3.36252418100003,3.36286328000006,3.36344721100005,3.36552290100002,3.36651397400004,3.36834404700005,3.37202932600007,3.37115314700003,3.36922070800006,3.36887667400004,3.37050957400004,3.37132897900005,3.37109423500004,3.37006433100004,3.36810965600006,3.36590012700003,3.36447966800006,3.36399007700004,3.36455857700002,3.36487625400002,3.36505835900005,3.36303447400007,3.36025760700005,3.35779813200003,3.35113359200005,3.34681234300007,3.34616002300004,3.34564823000005,3.34537411800005,3.34523671700003,3.34487928300007,3.34377037400003,3.34169247200003],"lat":[6.47490693500003,6.47339340800005,6.47046369500003,6.46985770100002,6.46994966400007,6.46993772100006,6.46925723000004,6.46870399700003,6.46847309000003,6.46824075400002,6.46711892100006,6.46645207800003,6.46588687300004,6.46552697500005,6.46529293700007,6.46451218400006,6.46250222800006,6.46038818400007,6.45903816000003,6.46361771200003,6.47195341200006,6.47784958100004,6.48130570200004,6.48476173400007,6.48964109200006,6.49513042900003,6.50102663600006,6.50191940900004,6.50118202700003,6.50071184400002,6.50022999100003,6.49999425500005,6.49962469600007,6.49961072400004,6.49988530100006,6.50020236700004,6.49982966400006,6.50212901300006,6.50341002700003,6.50385750700002,6.50529937400006,6.50616842900007,6.50794486900003,6.51016413800005,6.51075635900003,6.51099592800006,6.51123292200003,6.51140189900002,6.51104032200004,6.51186118300006,6.51281904100006,6.51326237300003,6.51415246500005,6.51462600300005,6.51479350200003,6.51480133300004,6.51470548100002,6.51442960200006,6.51430524400007,6.51421042500004,6.51439722800006,6.51449791000005,6.51441729700002,6.51390181300007,6.51364358200004,6.51341856200003,6.51330201300004,6.51328631800004,6.51444523800006,6.51642572400004,6.51773099800005,6.51864170700003,6.51942364600006,6.51936713700007,6.51647799100004,6.51856185900004,6.50981260200007,6.50736697400003,6.50470473500008,6.50140898800004,6.49788023500003,6.49591850100006,6.49407198600005,6.49260832100003,6.49139382100003,6.48964860400002,6.48791553900003,6.48553885000007,6.48278364800007,6.47923468800008,6.47594675400006,6.47649381300005,6.47728672700003,6.47855676700004,6.47863570600003,6.47780709000006,6.47806322300005,6.47826446200003,6.47787022400007,6.47730738800004,6.47679006700002,6.47597568400005,6.47490693500003]}]],[[{"lng":[4.37529341700002,4.37561818900002,4.38173511700006,4.38255841500006,4.38685202300007,4.40381414200004,4.42137616300005,4.44175958700003,4.46010499100004,4.47709139300002,4.48388626400003,4.49000114700004,4.49407822300003,4.49407820200003,4.49407815000006,4.49496412900004,4.49543720300005,4.50562904300006,4.53348679200008,4.55726807800005,4.56899831100003,4.56072478700003,4.55919975800003,4.56034328900006,4.56301167100003,4.56301167400005,4.56301161000005,4.56301165000002,4.55996222200002,4.55755002500007,4.55567232700002,4.55074839700006,4.54690837200008,4.54289633400003,4.53889000300006,4.53489317100002,4.53089640900004,4.52657324900002,4.52548240300007,4.52488533400003,4.51609771100004,4.51208837000007,4.50945835300007,4.50706188000004,4.50126238600006,4.49510485800005,4.49268860100005,4.48962866400007,4.48833090900007,4.48704129500004,4.48574343800004,4.48400868900006,4.48246820300005,4.46885304900007,4.45817905700005,4.45631961800007,4.44709446200005,4.44270190000003,4.43479360100002,4.43215743800005,4.42931789700003,4.42912272400002,4.42959263700004,4.43161561300008,4.43610679500006,4.43812690900006,4.44012977200003,4.43998585100007,4.44023731200002,4.44028110500005,4.43945631500003,4.43820005600003,4.43694644300007,4.43631977900003,4.43502237900003,4.43108663700002,4.42778862900008,4.42269316100004,4.42003266400008,4.41627003100007,4.41009155600005,4.40657363600008,4.40282746800005,4.39644271900005,4.39246478900003,4.39118511800007,4.38530390400007,4.38225619800005,4.38073923600007,4.37166867800005,4.36973716900008,4.36564979000002,4.36325744700002,4.36020752600007,4.35143992100006,4.34839008700004,4.33809750800003,4.33542924400007,4.32818600900004,4.31598710000003,4.30711075200003,4.29539580700003,4.29387713700004,4.28587158300007,4.27653035700007,4.27745042000004,4.27652249300007,4.27557753000002,4.27375277400006,4.26926039400007,4.26784989800007,4.26531672900006,4.26168367400004,4.25761914400005,4.25536830800007,4.24984841100007,4.25154864500007,4.25228000700002,4.26051909600005,4.26795212100006,4.27709639300002,4.28004692300004,4.28238251600004,4.28371264000003,4.28948988700006,4.29688120600002,4.30171205700003,4.30067903600008,4.29974286300006,4.29705234900007,4.28683964100003,4.27237500200005,4.26052538300007,4.25191347000003,4.24927518200008,4.24970026000005,4.24996236000004,4.26239226800004,4.27979579700002,4.31141031300007,4.33634319700008,4.34967172400007,4.37529341700002],"lat":[8.31818662400002,8.31682981300003,8.30143205900004,8.29935949500003,8.29188884200005,8.27872383500005,8.27046402100007,8.25299179800004,8.23600592000003,8.21834003700008,8.20271213200004,8.18232812400004,8.16670029600004,8.14971359400005,8.13340675300003,8.12277506500004,8.11709988000007,8.09195905200005,8.07157515300003,8.05866531800007,8.05475606200002,8.05395124400007,8.04899500100004,8.04137123000004,8.03412811300007,8.02459806800005,8.01926125200004,8.00896824700004,7.99410100100005,7.98203982500007,7.97960473700005,7.97629915700003,7.97316092600005,7.97141201300008,7.96919940300006,7.96621401600004,7.96322829000007,7.96095235400003,7.96037814700003,7.96006371800007,7.95562832200005,7.95372226100005,7.95281017800005,7.95195406400006,7.95252460700004,7.95244920000005,7.95220029300003,7.95062862100002,7.94885926600006,7.94643244100007,7.94466307500005,7.94266934700005,7.94187812400003,7.94225649900005,7.94149403800003,7.94079399000003,7.93980299000003,7.93931027900004,7.93855456200004,7.93830282100004,7.93673310100007,7.93475823100005,7.93235307200007,7.92887137000002,7.92147514300007,7.91821263900005,7.91350167500002,7.91249447100006,7.90771853100006,7.90421220300004,7.89981853700004,7.89476192600006,7.88948607200007,7.88684829300007,7.88507874400005,7.88327640000006,7.88323538700007,7.88624053900003,7.88796083500006,7.88988635800007,7.89156269100005,7.89151874200007,7.89212947400006,7.89270712800004,7.89249197700008,7.89110680800007,7.88664956900004,7.88420027900003,7.88242777600004,7.86938230900006,7.86563210100007,7.85946826100007,7.87211371200004,7.88278773900004,7.89612995900006,7.90489754600003,7.91633417700007,7.92319595300006,7.93501321300005,7.94301900900007,7.94446367100005,7.95455112900004,7.95750474700003,7.96551037700004,7.97111533400005,7.97930600800004,7.98302023500003,7.98804912000003,7.99306667500002,8.00024164100006,8.00723722200007,8.01597149900005,8.02469186100006,8.03274875600005,8.03666486900005,8.04584087500007,8.04548020600004,8.04938535400004,8.06119710000007,8.07048977100004,8.07729578200002,8.08108807400004,8.08337586800008,8.08490560800004,8.09250426700004,8.10514015400003,8.12108754000008,8.13612382300005,8.14363644900004,8.15697947200005,8.16771767000006,8.18258150100007,8.18995387200005,8.20656429700006,8.21572711700003,8.22297459300006,8.22744107600005,8.24014257600004,8.25792384700003,8.28090227600006,8.30128481800006,8.30981417600003,8.31818662400002]}]]],["Bassa","Bassa.1","Ifelodun","Ifelodun.1","Irepodun","Irepodun.1","Nasarawa","Nasarawa.1","Obi","Obi.1","Surulere","Surulere.1"],"nga[nga$shapeName %in% duplicate_area, ]",{"interactive":true,"className":"","pane":"tmap401","stroke":true,"color":"#666666","weight":1,"opacity":1,"fill":true,"fillColor":["#D9D9D9","#D9D9D9","#D9D9D9","#D9D9D9","#D9D9D9","#D9D9D9","#D9D9D9","#D9D9D9","#D9D9D9","#D9D9D9","#D9D9D9","#D9D9D9"],"fillOpacity":[1,1,1,1,1,1,1,1,1,1,1,1],"dashArray":"none","smoothFactor":1,"noClip":false},["<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>Bassa<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeName<\/nobr><\/td><td align=\"right\"><nobr>Bassa<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>Level<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeID<\/nobr><\/td><td align=\"right\"><nobr>NGA-ADM2-72505758B95534398<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeGroup<\/nobr><\/td><td align=\"right\"><nobr>NGA<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeType<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><\/table><\/div>","<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>Bassa<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeName<\/nobr><\/td><td align=\"right\"><nobr>Bassa<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>Level<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeID<\/nobr><\/td><td align=\"right\"><nobr>NGA-ADM2-72505758B52690633<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeGroup<\/nobr><\/td><td align=\"right\"><nobr>NGA<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeType<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><\/table><\/div>","<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>Ifelodun<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeName<\/nobr><\/td><td align=\"right\"><nobr>Ifelodun<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>Level<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeID<\/nobr><\/td><td align=\"right\"><nobr>NGA-ADM2-72505758B26581542<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeGroup<\/nobr><\/td><td align=\"right\"><nobr>NGA<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeType<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><\/table><\/div>","<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>Ifelodun<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeName<\/nobr><\/td><td align=\"right\"><nobr>Ifelodun<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>Level<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeID<\/nobr><\/td><td align=\"right\"><nobr>NGA-ADM2-72505758B18326272<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeGroup<\/nobr><\/td><td align=\"right\"><nobr>NGA<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeType<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><\/table><\/div>","<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>Irepodun<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeName<\/nobr><\/td><td align=\"right\"><nobr>Irepodun<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>Level<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeID<\/nobr><\/td><td align=\"right\"><nobr>NGA-ADM2-72505758B75034141<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeGroup<\/nobr><\/td><td align=\"right\"><nobr>NGA<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeType<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><\/table><\/div>","<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>Irepodun<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeName<\/nobr><\/td><td align=\"right\"><nobr>Irepodun<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>Level<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeID<\/nobr><\/td><td align=\"right\"><nobr>NGA-ADM2-72505758B79178637<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeGroup<\/nobr><\/td><td align=\"right\"><nobr>NGA<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeType<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><\/table><\/div>","<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>Nasarawa<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeName<\/nobr><\/td><td align=\"right\"><nobr>Nasarawa<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>Level<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeID<\/nobr><\/td><td align=\"right\"><nobr>NGA-ADM2-72505758B6786568<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeGroup<\/nobr><\/td><td align=\"right\"><nobr>NGA<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeType<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><\/table><\/div>","<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>Nasarawa<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeName<\/nobr><\/td><td align=\"right\"><nobr>Nasarawa<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>Level<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeID<\/nobr><\/td><td align=\"right\"><nobr>NGA-ADM2-72505758B67188591<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeGroup<\/nobr><\/td><td align=\"right\"><nobr>NGA<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeType<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><\/table><\/div>","<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>Obi<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeName<\/nobr><\/td><td align=\"right\"><nobr>Obi<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>Level<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeID<\/nobr><\/td><td align=\"right\"><nobr>NGA-ADM2-72505758B7318634<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeGroup<\/nobr><\/td><td align=\"right\"><nobr>NGA<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeType<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><\/table><\/div>","<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>Obi<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeName<\/nobr><\/td><td align=\"right\"><nobr>Obi<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>Level<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeID<\/nobr><\/td><td align=\"right\"><nobr>NGA-ADM2-72505758B3073896<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeGroup<\/nobr><\/td><td align=\"right\"><nobr>NGA<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeType<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><\/table><\/div>","<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>Surulere<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeName<\/nobr><\/td><td align=\"right\"><nobr>Surulere<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>Level<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeID<\/nobr><\/td><td align=\"right\"><nobr>NGA-ADM2-72505758B6675111<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeGroup<\/nobr><\/td><td align=\"right\"><nobr>NGA<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeType<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><\/table><\/div>","<style> div.leaflet-popup-content {width:auto !important;overflow-y:auto; overflow-x:hidden;}<\/style><div style=\"max-height:25em;padding-right:0px;\"><table>\n\t\t\t   <thead><tr><th colspan=\"2\"><b>Surulere<\/b><\/th><\/thead><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeName<\/nobr><\/td><td align=\"right\"><nobr>Surulere<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>Level<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeID<\/nobr><\/td><td align=\"right\"><nobr>NGA-ADM2-72505758B31597260<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeGroup<\/nobr><\/td><td align=\"right\"><nobr>NGA<\/nobr><\/td><\/tr><tr><td style=\"color: #888888;\"><nobr>shapeType<\/nobr><\/td><td align=\"right\"><nobr>ADM2<\/nobr><\/td><\/tr><\/table><\/div>"],null,["Bassa","Bassa","Ifelodun","Ifelodun","Irepodun","Irepodun","Nasarawa","Nasarawa","Obi","Obi","Surulere","Surulere"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLayersControl","args":[["Esri.WorldGrayCanvas","OpenStreetMap","Esri.WorldTopoMap"],"nga[nga$shapeName %in% duplicate_area, ]",{"collapsed":true,"autoZIndex":true,"position":"topleft"}]}],"limits":{"lat":[6.45903816000003,12.050348908],"lng":[3.31645892000006,9.02070395200008]},"fitBounds":[6.45903816000003,3.31645892000006,12.050348908,9.02070395200008,[]]},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Make sure the tmap mode set back to plot</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>tmap mode set to plotting</code></pre>
+</div>
+</div>
+<p>We will now access the individual index of the <code>nga</code> data frame and change the value. Lastly, we use the <a href="https://rdrr.io/r/base/length.html"><code>length()</code></a> function to ensure there is no more duplicated shapeName.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>nga<span class="sc">$</span>shapeName[<span class="fu">c</span>(<span class="dv">94</span>,<span class="dv">95</span>,<span class="dv">304</span>,<span class="dv">305</span>,<span class="dv">355</span>,<span class="dv">356</span>,<span class="dv">519</span>,<span class="dv">546</span>,<span class="dv">547</span>,<span class="dv">693</span>,<span class="dv">694</span>)] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Bassa (Kogi)"</span>,<span class="st">"Bassa (Plateau)"</span>,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                                                                               <span class="st">"Ifelodun (Kwara)"</span>,<span class="st">"Ifelodun (Osun)"</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                                                                               <span class="st">"Irepodun (Kwara)"</span>,<span class="st">"Irepodun (Osun)"</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                                                                               <span class="st">"Nassarawa"</span>,<span class="st">"Obi (Benue)"</span>,<span class="st">"Obi(Nasarawa)"</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                                                                               <span class="st">"Surulere (Lagos)"</span>,<span class="st">"Surulere (Oyo)"</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>((nga<span class="sc">$</span>shapeName[ nga<span class="sc">$</span>shapeName <span class="sc">%in%</span> nga<span class="sc">$</span>shapeName[<span class="fu">duplicated</span>(nga<span class="sc">$</span>shapeName)] ]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+</div>
+</section>
+<section id="projection-of-sf-dataframe" class="level3">
+<h3 class="anchored" data-anchor-id="projection-of-sf-dataframe"><strong>Projection of sf dataframe</strong></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ngaT <span class="ot">&lt;-</span> wp_sf  <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span> (<span class="st">"Country"</span> <span class="ot">=</span> <span class="st">"#clean_country_name"</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>          <span class="st">"clean_adm2"</span> <span class="ot">=</span> <span class="st">"#clean_adm2"</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>          <span class="st">"status"</span> <span class="ot">=</span> <span class="st">"#status_clean"</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>          <span class="st">"lat"</span> <span class="ot">=</span> <span class="st">"#lat_deg"</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>          <span class="st">"long"</span> <span class="ot">=</span> <span class="st">"#lon_deg"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span> (clean_adm2,status,lat,long) <span class="sc">%&gt;%</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">status =</span> <span class="fu">replace_na</span>(status, <span class="st">"Unknown"</span>))</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>ngaT_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(ngaT, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"long"</span>, <span class="st">"lat"</span>),  <span class="at">crs =</span> <span class="dv">4326</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>ngaT_sf <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(ngaT_sf, <span class="at">crs =</span> <span class="dv">26391</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span> (nga)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Coordinate Reference System:
+  User input: EPSG:4326 
+  wkt:
+GEOGCRS["WGS 84",
+    ENSEMBLE["World Geodetic System 1984 ensemble",
+        MEMBER["World Geodetic System 1984 (Transit)"],
+        MEMBER["World Geodetic System 1984 (G730)"],
+        MEMBER["World Geodetic System 1984 (G873)"],
+        MEMBER["World Geodetic System 1984 (G1150)"],
+        MEMBER["World Geodetic System 1984 (G1674)"],
+        MEMBER["World Geodetic System 1984 (G1762)"],
+        MEMBER["World Geodetic System 1984 (G2139)"],
+        ELLIPSOID["WGS 84",6378137,298.257223563,
+            LENGTHUNIT["metre",1]],
+        ENSEMBLEACCURACY[2.0]],
+    PRIMEM["Greenwich",0,
+        ANGLEUNIT["degree",0.0174532925199433]],
+    CS[ellipsoidal,2],
+        AXIS["geodetic latitude (Lat)",north,
+            ORDER[1],
+            ANGLEUNIT["degree",0.0174532925199433]],
+        AXIS["geodetic longitude (Lon)",east,
+            ORDER[2],
+            ANGLEUNIT["degree",0.0174532925199433]],
+    USAGE[
+        SCOPE["Horizontal component of 3D system."],
+        AREA["World."],
+        BBOX[-90,-180,90,180]],
+    ID["EPSG",4326]]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span> (ngaT_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Coordinate Reference System:
+  User input: EPSG:26391 
+  wkt:
+PROJCRS["Minna / Nigeria West Belt",
+    BASEGEOGCRS["Minna",
+        DATUM["Minna",
+            ELLIPSOID["Clarke 1880 (RGS)",6378249.145,293.465,
+                LENGTHUNIT["metre",1]]],
+        PRIMEM["Greenwich",0,
+            ANGLEUNIT["degree",0.0174532925199433]],
+        ID["EPSG",4263]],
+    CONVERSION["Nigeria West Belt",
+        METHOD["Transverse Mercator",
+            ID["EPSG",9807]],
+        PARAMETER["Latitude of natural origin",4,
+            ANGLEUNIT["degree",0.0174532925199433],
+            ID["EPSG",8801]],
+        PARAMETER["Longitude of natural origin",4.5,
+            ANGLEUNIT["degree",0.0174532925199433],
+            ID["EPSG",8802]],
+        PARAMETER["Scale factor at natural origin",0.99975,
+            SCALEUNIT["unity",1],
+            ID["EPSG",8805]],
+        PARAMETER["False easting",230738.26,
+            LENGTHUNIT["metre",1],
+            ID["EPSG",8806]],
+        PARAMETER["False northing",0,
+            LENGTHUNIT["metre",1],
+            ID["EPSG",8807]]],
+    CS[Cartesian,2],
+        AXIS["(E)",east,
+            ORDER[1],
+            LENGTHUNIT["metre",1]],
+        AXIS["(N)",north,
+            ORDER[2],
+            LENGTHUNIT["metre",1]],
+    USAGE[
+        SCOPE["Engineering survey, topographic mapping."],
+        AREA["Nigeria - onshore west of 6°30'E, onshore and offshore shelf."],
+        BBOX[3.57,2.69,13.9,6.5]],
+    ID["EPSG",26391]]</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="exploratory-data-analysis-eda" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis-eda">Exploratory Data Analysis (EDA)</h2>
+<section id="eda-using-statistical-graphics" class="level3">
+<h3 class="anchored" data-anchor-id="eda-using-statistical-graphics">EDA using statistical graphics</h3>
+<p>We can plot the distribution of the variables (i.e.&nbsp;Number of households with radio) by using appropriate Exploratory Data Analysis (EDA) as shown in the code chunk below.</p>
+<p>Histogram is useful to identify the overall distribution of the data values (i.e.&nbsp;left skew, right skew or normal distribution)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> ngaT_sf, </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span> <span class="fu">fct_infreq</span>(status))) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> status), <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">'count'</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>           <span class="fu">aes</span>(<span class="at">label=</span> <span class="fu">paste0</span>(<span class="fu">after_stat</span>(count), <span class="st">', '</span>, </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">round</span>(<span class="fu">after_stat</span>(count)<span class="sc">/</span><span class="fu">sum</span>(<span class="fu">after_stat</span>(count))<span class="sc">*</span><span class="dv">100</span>, </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">2</span>), <span class="st">'%'</span>)), <span class="at">vjust=</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size=</span> <span class="fl">2.5</span>) <span class="sc">+</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span> <span class="st">'No. of</span><span class="sc">\n</span><span class="st">Occurence'</span>, <span class="at">x=</span> <span class="st">'Status'</span>,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Distribution of Water Tap Status"</span>) <span class="sc">+</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.y=</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">0</span>), <span class="at">axis.ticks.x=</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.background=</span> <span class="fu">element_blank</span>(), <span class="at">axis.line=</span> <span class="fu">element_line</span>(<span class="at">color=</span> <span class="st">'grey'</span>),</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Take-home-Ex2_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
