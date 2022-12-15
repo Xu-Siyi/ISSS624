@@ -52,6 +52,7 @@ Two steps will be used to convert an asptial data file in wkt format into a sf d
 First, `st_as_sfc()` of sf package is used to derive a new field called *Geometry* as shown in the code chunk below.
 
 ```{r}
+#| eval: false
 wp_nga$Geometry = st_as_sfc(wp_nga$`New Georeferenced Column`)
 ```
 
@@ -87,9 +88,45 @@ Now we have column called "shapeName", which is the LGA name of Nigeria water po
 
 ![](images/paste-548FE3DC.png)
 
+```{r}
+nga_wp <- nga %>% 
+  mutate(`total wpt` = lengths(
+    st_intersects(nga, wp_nga))) %>%
+  mutate(`wpt functional` = lengths(
+    st_intersects(nga, wpt_functional))) %>%
+  mutate(`wpt non-functional` = lengths(
+    st_intersects(nga, wpt_nonfunctional))) %>%
+  mutate(`wpt unknown` = lengths(
+    st_intersects(nga, wpt_unknown)))
+```
+
+### Saving the Analytical Data Table
+
+```{r}
+#| eval: false
+nga_wp <- nga_wp %>%
+  mutate(pct_functional = `wpt functional`/`total wpt`) %>%
+  mutate(`pct_non-functional` = `wpt non-functional`/`total wpt`) %>%
+  select(., 3:4, 9:10, 18:23)
+```
+
+Things to learn from the code chunk above:
+
+`mutate()` of **dplyr** package is used to derive two fields namely pct_functional and pct_non-functional.
+
+to keep the file size small, `select()` of **dplyr** is used to retain only field 3,4,9,10, 18,19,20,21,22,and 23.
+
+Now, you have the tidy sf data table subsequent analysis. We will save the sf data table into rds format.
+
+```{r}
+write_rds(nga_wp, "Take home 2 data/nga_wp.rds")
+```
+
+There is only data file we use, nga_wp.rds, which is the combination of the geospatial and aspatial data.
+
 ## Data Wrangling
 
-[Reference](https://jordan-isss624-geospatial.netlify.app/posts/geo/geospatial_exercise/#data-wrangling): Ong Zhi Rong Jordan
+The reference of the code chunk in Data Wrangling part: [Ong Zhi Rong Jordan](https://jordan-isss624-geospatial.netlify.app/posts/geo/geospatial_exercise/#visualising-of-distribution-using-ggplot)
 
 ### **Checking of duplicated area name**
 
@@ -147,6 +184,7 @@ length((nga$shapeName[ nga$shapeName %in% nga$shapeName[duplicated(nga$shapeName
 ### **Projection of sf dataframe**
 
 ```{r}
+#| eval: false
 ngaT <- wp_sf  %>%
   rename ("Country" = "#clean_country_name",
           "clean_adm2" = "#clean_adm2",
@@ -166,13 +204,47 @@ st_crs (nga)
 st_crs (ngaT_sf)
 ```
 
+### 
+
+## Derive new variables
+
+::: callout-caution
+## Take-home Exercise 2 Objective
+
+In this take-home exercise you are required to regionalise Nigeria by using, but not limited to the following measures:
+
+-   Total number of functional water points
+
+-   Total number of nonfunctional water points
+
+-   Percentage of functional water points
+
+-   Percentage of non-functional water points
+
+-   Percentage of main water point technology (i.e. Hand Pump)
+
+-   Percentage of usage capacity (i.e. \< 1000, \>=1000)
+
+-   Percentage of rural water points
+:::
+
+What we have:
+
+-   Total number of functional water points
+
+-   Total number of nonfunctional water points
+
+    What we need to derive:
+
+### 
+
 ## Exploratory Data Analysis (EDA)
 
 ### EDA using statistical graphics
 
-We can plot the distribution of the variables (i.e. Number of households with radio) by using appropriate Exploratory Data Analysis (EDA) as shown in the code chunk below.
+I plot the distribution of the variables (i.e. Number of functional water point) by using Histogram graph.
 
-Histogram is useful to identify the overall distribution of the data values (i.e. left skew, right skew or normal distribution)
+The reference of the code chunk below: [Ong Zhi Rong Jordan](https://jordan-isss624-geospatial.netlify.app/posts/geo/geospatial_exercise/#visualising-of-distribution-using-ggplot)
 
 ```{r,fig.height=5,fig.width=6}
 ggplot(data= ngaT_sf, 
