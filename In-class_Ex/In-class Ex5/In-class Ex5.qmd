@@ -278,12 +278,6 @@ prob_T<-tm_shape(osun)+
 prob_T
 ```
 
-```{r}
-
-```
-
-remove the primary_road and secondary_road which is not significant and rerun the model to see the consistence result
-
 ## Re-calibrate the model without insignificant variables
 
 From the above logistic regression model result, the p-value of `distance_to_primary_road` and `distance_to_secondary_road` are 0.4744 and 0.5802. Both of them and higher than 0.05, which means those variables are not significant. Now we re-calibrate the logistic regression model and GWLR model by excluding the two independent variables that are not statistically significant during the initial round of model calibration.
