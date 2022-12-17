@@ -1,0 +1,430 @@
+---
+title: "In-class Exercise 5: Modeling the Spatial Variation of the Explanatory Factors of Water Point Status using Geograpgically Weighted Logistic Regression (GWLR) "
+author: "Xu Siyi"
+format: html
+editor: visual
+---
+
+## Overview
+
+Study area: Osun State, Nigeria
+
+`Osun.rds`: LGA boundaries of Osun State
+
+`Osun_wp_sf.rds`: water points within Osun State. sf point datafram
+
+### Model Variables
+
+Dependent Variable: **Water point status** (functional/non-functional)
+
+Independent variable:
+
+-   distance_to_primary_road (continuous)
+
+-   distance_to_secondary_road (continuous)
+
+-   distance_to_tertiary_road (continuous)
+
+-   distance_to_city (continuous)
+
+-   distance_to_town (continuous)
+
+-   water_point_population (continuous)
+
+-   local_population_1km (continuous)
+
+-   usage_capacity (categorical)
+
+-   is_urban (categorical)
+
+-   water_source_clean (categorical)
+
+## Data Import
+
+```{r}
+pacman::p_load(sf,spdep, tmap, tidyverse,dplyr, funModeling,rgdal,  blorr,corrplot,ggpubr,GWmodel,skimr,caret)
+```
+
+### Importing the Analytic Data
+
+```{r}
+osun_wp_sf <- read_rds("rds/Osun_wp_sf.rds") 
+osun <- read_rds("rds/Osun.rds") 
+```
+
+## 
+
+```{r}
+osun_wp_sf %>%
+  freq(input='status')
+```
+
+The Osun state consist of 55.5% functional water point and 44.5% non functional water point.
+
+```{r}
+tmap_mode("view")
+tm_shape(osun)+
+  tm_polygons(alpha=0.4)+
+tm_shape(osun_wp_sf)+
+  tm_dots(col="status",
+          alpha=0.6)+
+  tm_view(set.zoom.limits = c(9,12))
+```
+
+## EDA
+
+### summary statistics with skim
+
+```{r}
+osun_wp_sf %>%
+  skim()
+```
+
+There are 1144 missing value in `install_year` column so we won't use it.
+
+```{r}
+osun_wp_sf_clean<-osun_wp_sf %>%
+  filter_at(vars(status,
+                 distance_to_primary_road,
+                 distance_to_secondary_road,
+                 distance_to_tertiary_road,
+                 distance_to_city,
+                 distance_to_town,
+                 water_point_population,
+                 local_population_1km,
+                 usage_capacity,
+                 is_urban,
+                 water_source_clean),
+            all_vars(!is.na(.))) %>%
+  mutate(usage_capacity=as.factor(usage_capacity))
+```
+
+```{r}
+osun_wp_sf_clean %>%
+  freq(input='status')
+```
+
+```{r}
+osun_wp_sf_clean %>%
+  skim()
+```
+
+## Correlation Analysis
+
+```{r}
+osun_wp <- osun_wp_sf_clean %>%
+  select(c(7,35:39,42:43,46:47,57))%>%
+  st_set_geometry(NULL)#drop away the geometry column
+```
+
+```{r}
+cluster_vars.cor=cor(
+  osun_wp[,2:7])
+corrplot.mixed(cluster_vars.cor,
+               lower="ellipse",
+               upper="number",
+               tl.pos = "lt",
+               diag="l",
+               tl.col="black")
+```
+
+## Building a logistic regression model
+
+```{r}
+model<-glm(status ~ distance_to_primary_road+
+                 distance_to_secondary_road+
+                 distance_to_tertiary_road+
+                 distance_to_city+
+                 distance_to_town+
+                 water_point_population+
+                 local_population_1km+
+                 usage_capacity+
+                 is_urban+
+                 water_source_clean,
+           data=osun_wp_sf_clean,
+           family=binomial(link='logit'))
+```
+
+```{r}
+blr_regress(model)
+```
+
+distance_to_tertiary_road, distance_to_city, distance
+
+```{r}
+#report(model)
+```
+
+```{r}
+blr_confusion_matrix(model,cutoff=0.5)
+```
+
+![](images/paste-3C1A3A77.png)
+
+## Building a Geographically weight logistic regression (GWLR) model
+
+### Converting from sf to sp data frame
+
+```{r}
+osun_wp_sp<-osun_wp_sf_clean %>%
+  select(c(status,
+                 distance_to_primary_road,
+                 distance_to_secondary_road,
+                 distance_to_tertiary_road,
+                 distance_to_city,
+                 distance_to_town,
+                 water_point_population,
+                 local_population_1km,
+                 usage_capacity,
+                 is_urban,
+                 water_source_clean)) %>%
+  as_Spatial()
+osun_wp_sp
+```
+
+### Building Fixed Bandwidth GWR Model
+
+#### Computing fixed bandwidth
+
+```{r}
+#| eval: false
+bw.fixed<- bw.ggwr(status~distance_to_primary_road+
+                 distance_to_secondary_road+
+                 distance_to_tertiary_road+
+                 distance_to_city+
+                 distance_to_town+
+                 water_point_population+
+                 local_population_1km+
+                 usage_capacity+
+                 is_urban+
+                 water_source_clean,
+              data=osun_wp_sp,
+              family="binomial",
+              approach = "AIC",
+              kernel = "gaussian",
+              adaptive = FALSE,
+              longlat = FALSE)
+```
+
+```{r}
+#| eval: false
+bw.fixed
+```
+
+```{r}
+gwlr.fixed<-ggwr.basic(status~distance_to_primary_road+
+                 distance_to_secondary_road+
+                 distance_to_tertiary_road+
+                 distance_to_city+
+                 distance_to_town+
+                 water_point_population+
+                 local_population_1km+
+                 usage_capacity+
+                 is_urban+
+                 water_source_clean,
+              data=osun_wp_sp,
+              bw=2597.255,
+              family="binomial",
+              kernel="gaussian",
+              adaptive=FALSE,
+              longlat=FALSE)
+```
+
+```{r}
+gwlr.fixed
+```
+
+### Model Assessment
+
+#### Converting SDF into sf data frame
+
+```{r}
+gwr.fixed<-as.data.frame(gwlr.fixed$SDF)
+```
+
+```{r}
+gwr.fixed<-gwr.fixed %>%
+  mutate(most=ifelse(gwr.fixed$yhat>=0.5,T,F))
+```
+
+```{r}
+gwr.fixed$y<- as.factor(gwr.fixed$y)
+gwr.fixed$most<- as.factor(gwr.fixed$most)
+CM<-confusionMatrix(data=gwr.fixed$most,reference=gwr.fixed$y)
+CM
+```
+
+## Visualizing gwLR
+
+```{r}
+osun_wp_sf_selected<-osun_wp_sf_clean%>%
+  select(c(ADM2_EN,ADM2_PCODE,ADM1_EN,ADM1_PCODE,status
+           ))
+```
+
+```{r}
+gwr_sf.fixed<-cbind(osun_wp_sf_selected,gwr.fixed)
+```
+
+```{r}
+tmap_mode("view")
+prob_T<-tm_shape(osun)+
+  tm_polygons(alpha=0.1)+
+  tm_shape(gwr_sf.fixed)+
+  tm_dots(col="yhat",
+          border.col="gray60",
+          border.lwd=1)+
+  tm_view(set.zoom.limits = c(8,14))
+prob_T
+```
+
+```{r}
+
+```
+
+remove the primary_road and secondary_road which is not significant and rerun the model to see the consistence result
+
+## Re-calibrate the model without insignificant variables
+
+From the above logistic regression model result, the p-value of `distance_to_primary_road` and `distance_to_secondary_road` are 0.4744 and 0.5802. Both of them and higher than 0.05, which means those variables are not significant. Now we re-calibrate the logistic regression model and GWLR model by excluding the two independent variables that are not statistically significant during the initial round of model calibration.
+
+### Building the new logistic regression model
+
+```{r}
+model_new<-glm(status ~ 
+                 distance_to_tertiary_road+
+                 distance_to_city+
+                 distance_to_town+
+                 water_point_population+
+                 local_population_1km+
+                 usage_capacity+
+                 is_urban+
+                 water_source_clean,
+           data=osun_wp_sf_clean,
+           family=binomial(link='logit'))
+```
+
+```{r}
+blr_regress(model_new)
+```
+
+```{r}
+blr_confusion_matrix(model_new,cutoff=0.5)
+```
+
+Compare with the previous gwLR model, the accuracy decrease from 0.6739 to 0.6726.
+
+### Building a Geographically weight logistic regression (GWLR) model
+
+#### Converting from sf to sp data frame
+
+```{r}
+osun_wp_sp_new<-osun_wp_sf_clean %>%
+  select(c(status,
+                 distance_to_tertiary_road,
+                 distance_to_city,
+                 distance_to_town,
+                 water_point_population,
+                 local_population_1km,
+                 usage_capacity,
+                 is_urban,
+                 water_source_clean)) %>%
+  as_Spatial()
+osun_wp_sp_new
+```
+
+#### Building Fixed Bandwidth GWR Model
+
+##### Computing fixed bandwidth
+
+```{r}
+#| eval: false
+bw.fixed_new<- bw.ggwr(status~
+                 distance_to_tertiary_road+
+                 distance_to_city+
+                 distance_to_town+
+                 water_point_population+
+                 local_population_1km+
+                 usage_capacity+
+                 is_urban+
+                 water_source_clean,
+              data=osun_wp_sp_new,
+              family="binomial",
+              approach = "AIC",
+              kernel = "gaussian",
+              adaptive = FALSE,
+              longlat = FALSE)
+```
+
+```{r}
+#| eval: false
+bw.fixed_new
+```
+
+```{r}
+gwlr.fixed_new<-ggwr.basic(status~
+                 distance_to_tertiary_road+
+                 distance_to_city+
+                 distance_to_town+
+                 water_point_population+
+                 local_population_1km+
+                 usage_capacity+
+                 is_urban+
+                 water_source_clean,
+              data=osun_wp_sp_new,
+              bw=2597.255,
+              family="binomial",
+              kernel="gaussian",
+              adaptive=FALSE,
+              longlat=FALSE)
+```
+
+```{r}
+gwlr.fixed_new
+```
+
+#### Model Assessment
+
+##### Converting SDF into sf data frame
+
+```{r}
+gwr.fixed_new<-as.data.frame(gwlr.fixed_new$SDF)
+```
+
+```{r}
+gwr.fixed_new<-gwr.fixed_new %>%
+  mutate(most=ifelse(gwr.fixed_new$yhat>=0.5,T,F))
+```
+
+```{r}
+gwr.fixed_new$y<- as.factor(gwr.fixed_new$y)
+gwr.fixed_new$most<- as.factor(gwr.fixed_new$most)
+CM<-confusionMatrix(data=gwr.fixed_new$most,reference=gwr.fixed_new$y)
+CM
+```
+
+Compare with the previous gwLR model, the accuracy decrease from 0.8837 to 0.8668.
+
+### Visualizing gwLR
+
+```{r}
+osun_wp_sf_selected_new<-osun_wp_sf_clean%>%
+  select(c(ADM2_EN,ADM2_PCODE,ADM1_EN,ADM1_PCODE,status
+           ))
+```
+
+```{r}
+gwr_sf.fixed_new<-cbind(osun_wp_sf_selected_new,gwr.fixed_new)
+```
+
+```{r}
+tmap_mode("view")
+prob_T<-tm_shape(osun)+
+  tm_polygons(alpha=0.1)+
+  tm_shape(gwr_sf.fixed_new)+
+  tm_dots(col="yhat",
+          border.col="gray60",
+          border.lwd=1)+
+  tm_view(set.zoom.limits = c(8,14))
+prob_T
+```

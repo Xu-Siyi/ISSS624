@@ -5,15 +5,13 @@ format: html
 editor: visual
 ---
 
-## Overview
-
-## Getting Started
+## 1 Getting Started
 
 ```{r}
 pacman::p_load(sf,spdep, tmap, tidyverse,dplyr, funModeling,rgdal,  ClustGeo, ggpubr, cluster, factoextra, NbClust,heatmaply, corrplot, psych, GGally)
 ```
 
-## Data Import
+## 2 Data Import
 
 ### Import water point data
 
@@ -98,7 +96,7 @@ Now we have column called "shapeName", which is the LGA name of Nigeria water po
 
 ![](images/paste-548FE3DC.png)
 
-## Data Wrangling
+## 3 Data Wrangling
 
 The reference of the code chunk in Data Wrangling part: [Ong Zhi Rong Jordan](https://jordan-isss624-geospatial.netlify.app/posts/geo/geospatial_exercise/#visualising-of-distribution-using-ggplot)
 
@@ -162,7 +160,7 @@ length((nga$shapeName[ nga$shapeName %in% nga$shapeName[duplicated(nga$shapeName
 wp_sf <- st_as_sf(nga, coords = c("long", "lat"),  crs = 4326)
 ```
 
-## Derive new variables
+## 4 Derive new variables
 
 ::: callout-caution
 ## Take-home Exercise 2 Objective
@@ -310,7 +308,7 @@ write_rds(nga_wp, "Take home 2 data/nga_wp.rds")
 write_rds(wp_sf, "Take home 2 data/wp_sf.rds")
 ```
 
-## Exploratory Data Analysis (EDA)
+## 5 Exploratory Data Analysis (EDA)
 
 ```{r}
 nga_wp <- read_rds("Take home 2 data/nga_wp.rds")
@@ -443,7 +441,7 @@ tmap_arrange(func.map, nonfunc.map,handpump.map,usagelow.map,usagehigh.map,rural
              asp=NA, ncol=2)
 ```
 
-## Correlation Analysis
+## 6 Correlation Analysis
 
 ```{r}
 nga_wp_cor <- nga_wp %>%
@@ -458,7 +456,7 @@ corrplot.mixed(cluster_vars.cor,
                tl.col = "black")
 ```
 
-## **Hierarchy Cluster Analysis**
+## **7 Hierarchy Cluster Analysis**
 
 ### **Extracting clustering variables**
 
@@ -679,7 +677,7 @@ nga_wp_cluster <- cbind(nga_wp, as.matrix(groups)) %>%
 qtm(nga_wp_cluster, "CLUSTER")
 ```
 
-## Spatially Constrained Clustering: SKATER approach
+## 8 Spatially Constrained Clustering: SKATER approach
 
 ### Converting into SpatialPolygonsDataFrame
 
@@ -710,7 +708,7 @@ plot(nga.nb,
      add=TRUE)
 ```
 
-## Spatially Constrained Clustering: ClustGeo Method
+## 9 Spatially Constrained Clustering: ClustGeo Method
 
 ### Ward-like hierarchical clustering: ClustGeo
 
@@ -775,7 +773,7 @@ nga_wp_Gcluster <- cbind(nga_wp, as.matrix(groups)) %>%
 qtm(nga_wp_Gcluster, "CLUSTER")
 ```
 
-## Visual Interpretation of Clusters
+## 10 Visual Interpretation of Clusters
 
 ### Multivariate Visualisation
 
@@ -836,8 +834,4 @@ nga_wp_ngeo_cluster %>%
             sd_pct_usagelow = sd(pct_usagelow),
             sd_pct_usagehigh = sd(pct_usagehigh),
             sd_pct_rural = sd(pct_rural))
-```
-
-```{r}
-
 ```

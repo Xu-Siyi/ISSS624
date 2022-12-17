@@ -5,8 +5,6 @@ format: html
 editor: visual
 ---
 
-## Overview
-
 ## Getting Started
 
 ```{r}
